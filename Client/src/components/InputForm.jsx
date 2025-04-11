@@ -1,29 +1,39 @@
+import { useEffect, useRef } from 'react';
+import { Autocomplete } from '@react-google-maps/api';
+
 export default function InputForm({ address, sheetName, onChange }) {
-    const handleAddressChange = (e) => {
-      onChange({ address: e.target.value, sheetName });
-    };
-  
-    const handleSheetNameChange = (e) => {
-      onChange({ address, sheetName: e.target.value });
-    };
-  
-    return (
-      <form className="p-4 space-y-2">
+  const autoCompleteRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const handlePlaceChanged = () => {
+    const place = autoCompleteRef.current.getPlace();
+    if (place && place.formatted_address) {
+      onChange({ address: place.formatted_address, sheetName });
+    }
+  };
+
+  return (
+    <form className="p-4 space-y-2">
+      <Autocomplete
+        onLoad={(autocomplete) => (autoCompleteRef.current = autocomplete)}
+        onPlaceChanged={handlePlaceChanged}
+      >
         <input
+          ref={inputRef}
           type="text"
           placeholder="Enter Address"
           value={address}
-          onChange={handleAddressChange}
+          onChange={(e) => onChange({ address: e.target.value, sheetName })}
           className="border p-2 w-full"
         />
-        <input
-          type="text"
-          placeholder="Google Sheet Name"
-          value={sheetName}
-          onChange={handleSheetNameChange}
-          className="border p-2 w-full"
-        />
-      </form>
-    );
-  }
-  
+      </Autocomplete>
+      <input
+        type="text"
+        placeholder="Google Sheet Name"
+        value={sheetName}
+        onChange={(e) => onChange({ address, sheetName: e.target.value })}
+        className="border p-2 w-full"
+      />
+    </form>
+  );
+}
