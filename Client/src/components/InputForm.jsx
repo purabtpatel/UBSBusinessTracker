@@ -1,14 +1,29 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 
-export default function InputForm({ address, sheetName, onChange }) {
+export default function InputForm({ address, sheetId, onChange }) {
   const autoCompleteRef = useRef(null);
   const inputRef = useRef(null);
 
   const handlePlaceChanged = () => {
     const place = autoCompleteRef.current.getPlace();
     if (place && place.formatted_address) {
-      onChange({ address: place.formatted_address, sheetName });
+      onChange({ address: place.formatted_address, sheetId });
+    }
+  };
+
+  const extractSheetId = (link) => {
+    const match = link.match(/\/d\/([a-zA-Z0-9-_]+)/);
+    return match ? match[1] : '';
+  };
+
+  const handleSheetInputChange = (e) => {
+    const link = e.target.value;
+    const id = extractSheetId(link);
+    onChange({ address, sheetId: id });
+
+    if (!id) {
+      alert('Please paste a valid Google Sheets link (e.g. https://docs.google.com/spreadsheets/d/...)');
     }
   };
 
@@ -23,17 +38,22 @@ export default function InputForm({ address, sheetName, onChange }) {
           type="text"
           placeholder="Enter Address"
           value={address}
-          onChange={(e) => onChange({ address: e.target.value, sheetName })}
+          onChange={(e) => onChange({ address: e.target.value, sheetId })}
           className="border p-2 w-full"
         />
       </Autocomplete>
       <input
         type="text"
-        placeholder="Google Sheet Name"
-        value={sheetName}
-        onChange={(e) => onChange({ address, sheetName: e.target.value })}
+        placeholder="Paste Google Sheets Share Link"
+        onChange={handleSheetInputChange}
         className="border p-2 w-full"
       />
+      {sheetId && (
+        <p className="text-sm text-green-700">
+          Sheet ID detected: <span className="font-mono">{sheetId}</span><br />
+          Make sure to share this sheet with <span className="font-mono text-blue-700">apptracker@applicationtracker-456501.iam.gserviceaccount.com</span>
+        </p>
+      )}
     </form>
   );
 }
