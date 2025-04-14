@@ -53,13 +53,16 @@ async function fetchNearbyBusinesses(lat, lng) {
 
   // Fetch nearby places
   const response = await fetch(
-    `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=5000&type=business&key=${apiKey}`
+    `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=500&includedTypes=store&key=${apiKey}`
   );
   const data = await response.json();
 
   if (data.status !== 'OK') {
     throw new Error('Failed to fetch nearby businesses');
   }
+
+  //write a copy of the data to ./Sample.json
+  fs.writeFileSync('./Sample.json', JSON.stringify(data, null, 2), 'utf-8');
 
   return data.results.map((business) => ({
     name: business.name,
@@ -72,22 +75,24 @@ async function fetchNearbyBusinesses(lat, lng) {
  */
 app.post('/api/save-businesses', async (req, res) => {
   const { lat, lng, sheetId } = req.body;
+  console.log('Received request:', { lat, lng, sheetId });
 
   if (!lat || !lng || !sheetId) {
     return res.status(400).json({ error: 'Missing required parameters' });
   }
 
   try {
-    // Ensure the service account has permission to access the sheet
+    console.log('Ensuring sheet is shared...');
     await ensureSheetShared(sheetId);
 
-    // Fetch businesses from the Google Places API
+    console.log('Fetching businesses...');
     const businesses = await fetchNearbyBusinesses(lat, lng);
+    console.log('Fetched businesses:', businesses.length);
 
-    // Write fetched business data to the Google Sheet
+    console.log('Writing to sheet...');
     await sheets.spreadsheets.values.append({
       spreadsheetId: sheetId,
-      range: 'Sheet1!A1', // Adjust range if needed
+      range: 'Sheet1!A1',
       valueInputOption: 'RAW',
       requestBody: {
         values: businesses.map((b) => [b.name, b.address]),
@@ -96,7 +101,7 @@ app.post('/api/save-businesses', async (req, res) => {
 
     res.status(200).json({ message: 'Businesses saved to Google Sheet' });
   } catch (err) {
-    console.error('Error saving to sheet:', err);
+    console.error('Error saving to sheet:', err.response?.data || err.message || err);
     res.status(500).json({ error: err.message });
   }
 });
