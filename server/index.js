@@ -1,6 +1,6 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { google } from 'googleapis';
 import fetch from 'node-fetch';
 import fs from 'fs';
@@ -11,6 +11,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const TOMTOM_API_KEY = process.env.TOMTOM_API_KEY;
+
 const auth = new google.auth.GoogleAuth({
   keyFile: 'credentials.json', // Path to your service account credentials file
   scopes: ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive'],
@@ -19,92 +21,144 @@ const auth = new google.auth.GoogleAuth({
 const sheets = google.sheets({ version: 'v4', auth });
 const drive = google.drive({ version: 'v3', auth });
 
-/**
- * Ensure that the service account has permission to edit the Google Sheet.
- */
-async function ensureSheetShared(sheetId) {
-  const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL; // Email of your service account
+
+app.post('/api/places', async (req, res) => {
+  const { lat, lon, radius, categorySet } = req.body;
+
+  const url = `https://api.tomtom.com/search/2/poiSearch/.json?key=${TOMTOM_API_KEY}&lat=${lat}&lon=${lon}&radius=${radius}&categorySet=${encodeURIComponent(categorySet)}&countrySet=US`;
 
   try {
-    await drive.permissions.create({
-      fileId: sheetId,
-      requestBody: {
-        type: 'user',
-        role: 'writer',
-        emailAddress: email,
-      },
-      fields: 'id',
-    });
-    console.log('Permission added for service account');
-  } catch (err) {
-    if (err.errors?.[0]?.reason === 'duplicate') {
-      console.log('Service account already has permission');
-    } else {
-      throw err;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const results = filterUSResults(data.results || []);
+    res.json(results);
+  } catch (error) {
+    console.error('Error fetching places:', error);
+    res.status(500).json({ error: 'Failed to fetch places' });
+  }
+});
+
+
+const filterUSResults = results =>
+  results.filter(place => place.address?.countryCodeISO3 === 'USA');
+
+app.get('/api/places-categories', async (req, res) => {
+  try{
+    const apiUrl = `https://api.tomtom.com/search/2/poiCategories.json?key=${TOMTOM_API_KEY}`;
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      const errorBody = await response.text();
+      console.error(`TomTom API Error: ${response.status} ${response.statusText}`, errorBody);
+      throw new Error(`TomTom API request failed with status ${response.status}`);
     }
+    const data = await response.json(); 
+    console.log('TomTom API Response:', data); 
+
+    const simplifiedCategories = data.poiCategories.map(category => {
+      return {
+        id: category.id,
+        name: category.name
+      };
+    });
+  
+    res.json(simplifiedCategories);
+  } catch (error) {
+      console.error('Error in /api/places-categories handler:', error);
+      res.status(500).json({ error: 'Failed to fetch places categories' });
+    }
+});
+
+app.get('/api/places-nearby', async (req, res) => {
+  const { lat, lon, radius } = req.body;
+  console.log('Received request for nearby places:', { lat, lon, radius });
+  const apiUrl = `https://api.tomtom.com/search/2/nearbySearch/.json?key=${TOMTOM_API_KEY}&lat=${lat}&lon=${lon}&radius=${radius}`;
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      const errorBody = await response.text(); // Get error details from TomTom if available
+      console.error(`TomTom API Error: ${response.status} ${response.statusText}`, errorBody);
+      throw new Error(`TomTom API request failed with status ${response.status}`);
+    }
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Error in /api/places-nearby handler:', error);
+    res.status(500).json({ error: 'Failed to fetch nearby places' });
   }
-}
+});
 
-/**
- * Fetch businesses from Google Places API within a radius of a specific location.
- */
-async function fetchNearbyBusinesses(lat, lng) {
-  const apiKey = process.env.GOOGLE_MAPS_API_KEY; // Ensure the Google Maps API key is in your .env file
+app.post('/api/geocode', async (req, res) => {
+  const { address } = req.body;
 
-  // Fetch nearby places
-  const response = await fetch(
-    `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=500&includedTypes=store&key=${apiKey}`
-  );
-  const data = await response.json();
-
-  if (data.status !== 'OK') {
-    throw new Error('Failed to fetch nearby businesses');
-  }
-
-  //write a copy of the data to ./Sample.json
-  fs.writeFileSync('./Sample.json', JSON.stringify(data, null, 2), 'utf-8');
-
-  return data.results.map((business) => ({
-    name: business.name,
-    address: business.vicinity,
-  }));
-}
-
-/**
- * API endpoint to fetch businesses based on lat/lng and save them to a Google Sheet.
- */
-app.post('/api/save-businesses', async (req, res) => {
-  const { lat, lng, sheetId } = req.body;
-  console.log('Received request:', { lat, lng, sheetId });
-
-  if (!lat || !lng || !sheetId) {
-    return res.status(400).json({ error: 'Missing required parameters' });
-  }
+  const url = `https://api.tomtom.com/search/2/geocode/${encodeURIComponent(address)}.json?key=${TOMTOM_API_KEY}&countrySet=US`;
 
   try {
-    console.log('Ensuring sheet is shared...');
-    await ensureSheetShared(sheetId);
+    const response = await fetch(url);
+    const data = await response.json();
 
-    console.log('Fetching businesses...');
-    const businesses = await fetchNearbyBusinesses(lat, lng);
-    console.log('Fetched businesses:', businesses.length);
+    const result = data.results[0];
+    res.json(result.position);
+  } catch (error) {
+    console.error('Error geocoding:', error);
+    res.status(500).json({ error: 'Failed to geocode address' });
+  }
+});
 
-    console.log('Writing to sheet...');
+app.post('/api/reverse-geocode', async (req, res) => {
+  const { lat, lon } = req.body;
+
+  const url = `https://api.tomtom.com/search/2/reverseGeocode/${lat},${lon}.json?key=${TOMTOM_API_KEY}`;
+
+  try {
+    const response = await fetch(url);
+    console.log('Reverse geocode URL:', response); // Log the URL for debugging
+    const data = await response.json();
+
+    const address = data.addresses[0]?.address?.freeformAddress || 'Unknown';
+    res.json({ address });
+  } catch (error) {
+    console.error('Error reverse geocoding:', error);
+    res.status(500).json({ error: 'Failed to reverse geocode' });
+  }
+});
+
+app.post('/api/export-to-sheet', async (req, res) => {
+  const { sheetId, pois } = req.body;
+
+  if (!Array.isArray(pois) || pois.length === 0) {
+    return res.status(400).json({ error: 'No POIs provided' });
+  }
+
+  const rows = pois.map(poi => [
+    poi.poi?.name || '',
+    poi.address?.freeformAddress || '',
+    poi.position?.lat || '',
+    poi.position?.lon || '',
+    poi.poi?.phone || '',
+    poi.poi?.url || ''
+  ]);
+
+  try {
     await sheets.spreadsheets.values.append({
       spreadsheetId: sheetId,
       range: 'Sheet1!A1',
       valueInputOption: 'RAW',
       requestBody: {
-        values: businesses.map((b) => [b.name, b.address]),
+        values: [
+          ['Name', 'Address', 'Latitude', 'Longitude', 'Phone', 'Website'],
+          ...rows
+        ],
       },
     });
 
-    res.status(200).json({ message: 'Businesses saved to Google Sheet' });
-  } catch (err) {
-    console.error('Error saving to sheet:', err.response?.data || err.message || err);
-    res.status(500).json({ error: err.message });
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error writing to sheet:', error);
+    res.status(500).json({ error: 'Failed to write to Google Sheet' });
   }
 });
+
 
 // Start the server
 const PORT = process.env.PORT || 3001;
