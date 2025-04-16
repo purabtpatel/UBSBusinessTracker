@@ -1,35 +1,79 @@
 import React, { useEffect, useRef } from 'react';
 import tt from '@tomtom-international/web-sdk-maps';
 import '@tomtom-international/web-sdk-maps/dist/maps.css';
+import * as turf from '@turf/turf';
 
+const TomTomMap = ({ center, radius, onMapClick }) => {
+  const mapRef = useRef(null);
+  const mapInstance = useRef(null);
 
-const TomTomMap = ({ center, onMapClick }) => {
-  const mapRef = useRef();
-
+  // Init map
   useEffect(() => {
-    if (!tt) {
-      console.error('TomTom SDK not loaded. Make sure you included the script in index.html.');
-      return;
-    }
-
-    const map = tt.map({
+    mapInstance.current = tt.map({
       key: import.meta.env.VITE_TOMTOM_API_KEY,
       container: mapRef.current,
       center,
       zoom: 12,
     });
 
-    map.addControl(new tt.NavigationControl());
+    mapInstance.current.addControl(new tt.NavigationControl());
 
-    map.on('click', (e) => {
+    mapInstance.current.on('click', (e) => {
       const { lng, lat } = e.lngLat;
       onMapClick({ lat, lon: lng });
     });
 
-    return () => map.remove();
+    return () => {
+      mapInstance.current?.remove();
+    };
+  }, []);
+
+  // Update map center
+  useEffect(() => {
+    if (mapInstance.current && center) {
+      mapInstance.current.setCenter(center);
+    }
   }, [center]);
 
-  return <div ref={mapRef} className="tomtom-map" />;
+  // Draw/Update radius circle
+  useEffect(() => {
+    const map = mapInstance.current;
+    if (!map || !center || !radius) return;
+
+    const drawCircle = () => {
+      const circle = turf.circle(center, radius / 1000, {
+        steps: 64,
+        units: 'kilometers',
+      });
+
+      if (map.getLayer('radius-circle')) {
+        map.getSource('radius-circle').setData(circle);
+      } else {
+        map.addSource('radius-circle', {
+          type: 'geojson',
+          data: circle,
+        });
+
+        map.addLayer({
+          id: 'radius-circle',
+          type: 'fill',
+          source: 'radius-circle',
+          paint: {
+            'fill-color': '#1D4ED8',
+            'fill-opacity': 0.2,
+          },
+        });
+      }
+    };
+
+    if (map.isStyleLoaded()) {
+      drawCircle();
+    } else {
+      map.once('load', drawCircle);
+    }
+  }, [center, radius]);
+
+  return <div ref={mapRef} style={{ width: '100%', height: '400px' }} />;
 };
 
 export default TomTomMap;

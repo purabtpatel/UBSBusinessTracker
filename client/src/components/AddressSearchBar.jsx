@@ -1,24 +1,36 @@
 import React, { useState } from 'react';
+import Paper from '@mui/material/Paper';
+import InputBase from '@mui/material/InputBase';
+import IconButton from '@mui/material/IconButton';
+import SearchIcon from '@mui/icons-material/Search';
 
 const AddressSearchBar = ({ onSearch }) => {
   const [address, setAddress] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (address) onSearch(address);
+    if (address.trim()) {
+      onSearch(address.trim());
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
-      <input
-        type="text"
+    <Paper
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: '100%', maxWidth: 600, mb: 2 }}
+    >
+      <InputBase
+        sx={{ ml: 1, flex: 1 }}
         placeholder="Enter address..."
         value={address}
-        onChange={e => setAddress(e.target.value)}
-        className="border px-3 py-2 rounded w-full"
+        onChange={(e) => setAddress(e.target.value)}
+        inputProps={{ 'aria-label': 'enter address' }}
       />
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Search</button>
-    </form>
+      <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
+        <SearchIcon />
+      </IconButton>
+    </Paper>
   );
 };
 

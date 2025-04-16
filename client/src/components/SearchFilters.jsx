@@ -1,53 +1,76 @@
-import { useState } from 'react';
-import categories from '../data/tomtomCategories.json';
+import React from 'react';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
+import tomtomCategoriesRaw from '../data/tomtomCategories.json';
 
-const radiusOptions = [
-  { value: 1000, label: '1 km' },
-  { value: 3000, label: '3 km' },
-  { value: 5000, label: '5 km' },
-  { value: 10000, label: '10 km' },
-  { value: 20000, label: '20 km' },
-];
+const SearchFilters = ({ radius, setRadius, categorySet, setCategorySet, onSearch }) => {
+  const radiusOptions = [
+    { value: 1000, label: '1 km' },
+    { value: 3000, label: '3 km' },
+    { value: 5000, label: '5 km' },
+    { value: 10000, label: '10 km' },
+  ];
 
-const SearchFilters = ({ onSearch }) => {
-  const [radius, setRadius] = useState(5000);
-  const [placeType, setPlaceType] = useState(categories[0]?.id || '');
+  const categoryOptions = tomtomCategoriesRaw
+    .filter(cat => cat.id.toString().length <= 4)
+    .map(cat => ({
+      value: cat.id.toString(),
+      label: cat.name
+    }));
+
+  const handlePlaceTypeChange = (selected) => {
+    const values = selected.map(option => option.label);
+    setCategorySet(values.join(','));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSearch({ radius, categorySet: placeType });
+    onSearch({ radius, categorySet });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="search-filters">
-      <div className="filters-header">
-        <h2>Search Filters</h2>
-      </div>
+    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+      <Box sx={{ mb: 2 }}>
+        <Autocomplete
+          multiple
+          options={categoryOptions}
+          getOptionLabel={(option) => option.label}
+          onChange={(e, value) => handlePlaceTypeChange(value)}
+          filterSelectedOptions
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Place Types"
+              placeholder="Select categories"
+              variant="outlined"
+            />
+          )}
+        />
+      </Box>
 
-      <div className="filter-group">
-        <label>Place Type</label>
-        <select value={placeType} onChange={(e) => setPlaceType(e.target.value)}>
-          {categories.map((type) => (
-            <option key={type.id} value={type.id}>
-              {type.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="filter-group">
-        <label>Search Radius</label>
-        <select value={radius} onChange={(e) => setRadius(Number(e.target.value))}>
+      <Box sx={{ mb: 2 }}>
+        <TextField
+          select
+          label="Search Radius"
+          value={radius}
+          onChange={(e) => setRadius(Number(e.target.value))}
+          fullWidth
+        >
           {radiusOptions.map((option) => (
-            <option key={option.value} value={option.value}>
+            <MenuItem key={option.value} value={option.value}>
               {option.label}
-            </option>
+            </MenuItem>
           ))}
-        </select>
-      </div>
+        </TextField>
+      </Box>
 
-      <button type="submit">Search POIs</button>
-    </form>
+      <Button variant="contained" type="submit">
+        Search
+      </Button>
+    </Box>
   );
 };
 

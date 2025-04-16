@@ -23,9 +23,9 @@ const drive = google.drive({ version: 'v3', auth });
 
 
 app.post('/api/places', async (req, res) => {
-  const { lat, lon, radius, categorySet } = req.body;
+  const { lat, lon, radius, category } = req.body;
 
-  const url = `https://api.tomtom.com/search/2/poiSearch/.json?key=${TOMTOM_API_KEY}&lat=${lat}&lon=${lon}&radius=${radius}&categorySet=${encodeURIComponent(categorySet)}&countrySet=US`;
+  const url = `https://api.tomtom.com/search/2/poiSearch/${encodeURIComponent(category)}.json?key=${TOMTOM_API_KEY}&lat=${lat}&lon=${lon}&radius=${radius}&countrySet=US`;
 
   try {
     const response = await fetch(url);
@@ -43,7 +43,7 @@ app.post('/api/places', async (req, res) => {
 const filterUSResults = results =>
   results.filter(place => place.address?.countryCodeISO3 === 'USA');
 
-app.get('/api/places-categories', async (req, res) => {
+app.post('/api/categories', async (req, res) => {
   try{
     const apiUrl = `https://api.tomtom.com/search/2/poiCategories.json?key=${TOMTOM_API_KEY}`;
     const response = await fetch(apiUrl);
@@ -69,7 +69,7 @@ app.get('/api/places-categories', async (req, res) => {
     }
 });
 
-app.get('/api/places-nearby', async (req, res) => {
+app.post('/api/places-nearby', async (req, res) => {
   const { lat, lon, radius } = req.body;
   console.log('Received request for nearby places:', { lat, lon, radius });
   const apiUrl = `https://api.tomtom.com/search/2/nearbySearch/.json?key=${TOMTOM_API_KEY}&lat=${lat}&lon=${lon}&radius=${radius}`;
