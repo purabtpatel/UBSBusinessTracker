@@ -69,7 +69,7 @@ const TomTomMap = ({ center, radius, onMapClick, pois = [] }) => {
           type: 'fill',
           source: 'radius-circle',
           paint: {
-            'fill-color': '#1D4ED8',
+            'fill-color': '#1D4ED7',
             'fill-opacity': 0.2,
           },
         });
