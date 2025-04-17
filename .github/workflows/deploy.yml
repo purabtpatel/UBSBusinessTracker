@@ -31,9 +31,9 @@ jobs:
         script: |
           cd ~/app
           npm install --prefix server
-          npm install --prefix Client
-          npm run build --prefix Client
-          cp -r Client/dist server/public
+          npm install --prefix client
+          npm run build --prefix client
+          cp -r client/dist server/public
           pm2 start server/index.js --name poi-server || pm2 restart poi-server
           pm2 save
           
