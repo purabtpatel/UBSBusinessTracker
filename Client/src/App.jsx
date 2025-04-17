@@ -38,7 +38,7 @@ const App = () => {
     console.log('Filter search:', { radius, categorySet, center });
     setRadius(radius);
     setCategorySet(categorySet);
-  
+
     try {
       if (!categorySet) {
         console.log('No category set, using nearby search');
@@ -87,7 +87,9 @@ const App = () => {
           center={[center.lon, center.lat]}
           radius={radius}
           onMapClick={handleMapClick}
+          pois={pois}
         />
+
         <div className="side-container">
           <SearchFilters
             radius={radius}
