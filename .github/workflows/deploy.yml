@@ -2,113 +2,54 @@ name: Deploy to Lightsail
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Install rsync
-      run: sudo apt-get install rsync
+      - name: Install rsync
+        run: sudo apt-get update && sudo apt-get install -y rsync
 
-    - name: Upload files to Lightsail
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.LIGHTSAIL_HOST }}
-        username: ${{ secrets.LIGHTSAIL_USER }}
-        key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-        source: "."
-        target: "~/app"
+      - name: Upload files to Lightsail
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          source: "."
+          target: "~/app"
 
-    - name: SSH into instance and build/deploy
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ secrets.LIGHTSAIL_HOST }}
-        username: ${{ secrets.LIGHTSAIL_USER }}
-        key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-        script: |
-          # Set up folders
-          mkdir -p ~/app/client ~/app/server ~/app/build
+      - name: SSH into Lightsail and deploy
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          script: |
+            # Prepare directories
+            mkdir -p ~/app/client ~/app/server ~/app/build
 
-          # Move files into proper places
-          mv ~/app/client/* ~/app/client/
-          mv ~/app/server/* ~/app/server/
+            # Optional: Clean up old client/server dirs if needed
+            # rm -rf ~/app/client/* ~/app/server/*
 
-          # Build client
-          cd ~/app/client
-          npm install
-          npm run build
+            # Build client
+            cd ~/app/client
+            npm install
+            npm run build
 
-          # Copy static files to public web root
-          sudo mkdir -p /var/www/poi-app
-          sudo rm -rf /var/www/poi-app/*
-          sudo cp -r dist/* /var/www/poi-app/
+            # Deploy client static files
+            sudo mkdir -p /var/www/poi-app
+            sudo rm -rf /var/www/poi-app/*
+            sudo cp -r dist/* /var/www/poi-app/
 
-          # Set up server
-          cd ~/app/server
-          npm install
-
-          # Restart server (localhost only)
-          pm2 start index.js --name poi-server --watch -- --port 3001 || pm2 restart poi-server
-          pm2 save
-name: Deploy to Lightsail
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Install rsync
-      run: sudo apt-get install rsync
-
-    - name: Upload files to Lightsail
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.LIGHTSAIL_HOST }}
-        username: ${{ secrets.LIGHTSAIL_USER }}
-        key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-        source: "."
-        target: "~/app"
-
-    - name: SSH into instance and build/deploy
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ secrets.LIGHTSAIL_HOST }}
-        username: ${{ secrets.LIGHTSAIL_USER }}
-        key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-        script: |
-          # Set up folders
-          mkdir -p ~/app/client ~/app/server ~/app/build
-
-          # Move files into proper places
-          mv ~/app/client/* ~/app/client/
-          mv ~/app/server/* ~/app/server/
-
-          # Build client
-          cd ~/app/client
-          npm install
-          npm run build
-
-          # Copy static files to public web root
-          sudo mkdir -p /var/www/poi-app
-          sudo rm -rf /var/www/poi-app/*
-          sudo cp -r dist/* /var/www/poi-app/
-
-          # Set up server
-          cd ~/app/server
-          npm install
-
-          # Restart server (localhost only)
-          pm2 start index.js --name poi-server --watch -- --port 3001 || pm2 restart poi-server
-          pm2 save
+            # Start/Restart server
+            cd ~/app/server
+            npm install
+            pm2 start index.js --name poi-server --watch -- --port 3001 || pm2 restart poi-server
+            pm2 save
