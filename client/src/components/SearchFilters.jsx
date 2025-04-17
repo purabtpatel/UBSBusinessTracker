@@ -37,6 +37,7 @@ const SearchFilters = ({ radius, setRadius, categorySet, setCategorySet, onSearc
         <Autocomplete
           multiple
           options={categoryOptions}
+          size='small'
           getOptionLabel={(option) => option.label}
           onChange={(e, value) => handlePlaceTypeChange(value)}
           filterSelectedOptions
@@ -55,6 +56,7 @@ const SearchFilters = ({ radius, setRadius, categorySet, setCategorySet, onSearc
         <TextField
           select
           label="Search Radius"
+          size='small'
           value={radius}
           onChange={(e) => setRadius(Number(e.target.value))}
           fullWidth

@@ -1,7 +1,7 @@
 const PoiList = ({ results, center }) => {
   if (!results || results.length === 0) {
     return (
-      <div style={{ padding: '1rem', color: '#555' }}>
+      <div style={{ padding: '0.5rem', fontSize: '0.8rem', color: '#555' }}>
         No places found. Try adjusting your filters or choosing a new location.
       </div>
     );
@@ -30,10 +30,10 @@ const PoiList = ({ results, center }) => {
   });
 
   return (
-    <div style={{ padding: '1rem', maxHeight: '38vh', overflowY: 'auto', border: '1px solid #ddd' }}>
-      <h2 style={{ marginBottom: '1rem', fontSize: '1.2rem' }}>
+    <div style={{ padding: '0.5rem', maxHeight: '38vh', overflowY: 'auto', border: '1px solid #ddd', fontSize: '0.8rem' }}>
+      <div style={{ marginBottom: '0.5rem', fontWeight: 600 }}>
         {sortedResults.length} Places Found
-      </h2>
+      </div>
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {sortedResults.map((place, index) => {
           const name = place.poi?.name || 'Unnamed Place';
@@ -48,22 +48,20 @@ const PoiList = ({ results, center }) => {
                   place.position.lon
                 ).toFixed(2)
               : null;
-  
+
           return (
             <li
               key={place.id || index}
               style={{
-                padding: '0.75rem 0',
+                padding: '0.4rem 0',
                 borderBottom: '1px solid #eee',
               }}
             >
-              <div style={{ fontWeight: 500, fontSize: '1rem' }}>
+              <div style={{ fontWeight: 500 }}>
                 {name} <span style={{ color: '#666' }}>• {categories}</span>
               </div>
-              <div style={{ fontSize: '0.9rem', color: '#444' }}>{address}</div>
-              {dist && (
-                <div style={{ fontSize: '0.8rem', color: '#888' }}>{dist} mi away</div>
-              )}
+              <div style={{ color: '#444' }}>{address}</div>
+              {dist && <div style={{ color: '#888' }}>{dist} mi away</div>}
             </li>
           );
         })}

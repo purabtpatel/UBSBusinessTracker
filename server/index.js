@@ -136,7 +136,22 @@ app.post('/api/export-to-sheet', async (req, res) => {
     return res.status(400).json({ error: 'No POIs provided' });
   }
 
-  const rows = pois.map(poi => [
+  const timestamp = new Date().toISOString();
+
+  // Define the header columns
+  const headers = [
+    'Name',
+    'Address',
+    'Phone',
+    'Website',
+    'Search Categories',
+    'Latitude',
+    'Longitude',
+    'POI ID',
+    'Timestamp',
+  ];
+
+  const newRows = pois.map((poi) => [
     poi.poi?.name || '',
     poi.address?.freeformAddress || '',
     poi.poi?.phone || '',
@@ -144,27 +159,76 @@ app.post('/api/export-to-sheet', async (req, res) => {
     poi.poi?.categories?.join(', ') || '',
     poi.position?.lat || '',
     poi.position?.lon || '',
+    poi.id || '',
+    timestamp,
   ]);
 
   try {
-    await sheets.spreadsheets.values.append({
+    // STEP 1: Read existing sheet content
+    const getRes = await sheets.spreadsheets.values.get({
       spreadsheetId: sheetId,
-      range: 'Sheet1!A1',
-      valueInputOption: 'RAW',
-      requestBody: {
-        values: [
-          ['Name', 'Address', 'Phone', 'Website', 'Search Categories', 'Latitude', 'Longitude',],
-          ...rows
-        ],
-      },
+      range: 'Sheet1',
     });
 
-    res.json({ success: true });
+    const values = getRes.data.values || [];
+
+    const existingHeader = values[0] || [];
+    const existingData = values.slice(1); // exclude header row
+
+    // STEP 2: Add header row if missing or incomplete
+    if (existingHeader.length < headers.length) {
+      await sheets.spreadsheets.values.update({
+        spreadsheetId: sheetId,
+        range: 'Sheet1!A1',
+        valueInputOption: 'RAW',
+        requestBody: {
+          values: [headers],
+        },
+      });
+    }
+
+    // STEP 3: Extract existing POI IDs regardless of their row position
+    const poiIdColumnIndex = existingHeader.indexOf('POI ID');
+    const existingIds = new Set();
+
+    if (poiIdColumnIndex !== -1) {
+      for (let row of existingData) {
+        const existingId = row[poiIdColumnIndex];
+        if (existingId) {
+          existingIds.add(existingId.trim());
+        }
+      }
+    }
+
+    // STEP 4: Filter out duplicates using POI ID
+    const uniqueRows = newRows.filter((row) => !existingIds.has(row[7])); // 7 = POI ID column
+    const skipped = newRows.length - uniqueRows.length;
+
+    // STEP 5: Append unique rows (if any)
+    if (uniqueRows.length > 0) {
+      await sheets.spreadsheets.values.append({
+        spreadsheetId: sheetId,
+        range: 'Sheet1',
+        valueInputOption: 'RAW',
+        insertDataOption: 'INSERT_ROWS',
+        requestBody: {
+          values: uniqueRows,
+        },
+      });
+    }
+
+    res.json({
+      success: true,
+      added: uniqueRows.length,
+      skipped,
+      total: newRows.length,
+    });
   } catch (error) {
-    console.error('Error writing to sheet:', error);
-    res.status(500).json({ error: 'Failed to write to Google Sheet' });
+    console.error('Error exporting to sheet:', error.message);
+    res.status(500).json({ error: 'Failed to export POIs to Google Sheet' });
   }
 });
+
 
 // Add this alongside your other Express routes
 app.post('/api/check-sheet', async (req, res) => {
