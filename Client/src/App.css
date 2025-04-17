@@ -38,7 +38,7 @@
 .app-container{
 display: flex;
 flex-direction: column;
-overflow-y: hidden;
+overflow-y: none;
 
 }
 
@@ -49,5 +49,5 @@ overflow-y: hidden;
 .map-filter-container{
   display: flex;
   flex-direction: row;
-
+  overflow-y: none;
 }

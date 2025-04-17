@@ -139,10 +139,11 @@ app.post('/api/export-to-sheet', async (req, res) => {
   const rows = pois.map(poi => [
     poi.poi?.name || '',
     poi.address?.freeformAddress || '',
+    poi.poi?.phone || '',
+    poi.poi?.url || '',
+    poi.poi?.categories?.join(', ') || '',
     poi.position?.lat || '',
     poi.position?.lon || '',
-    poi.poi?.phone || '',
-    poi.poi?.url || ''
   ]);
 
   try {
@@ -152,7 +153,7 @@ app.post('/api/export-to-sheet', async (req, res) => {
       valueInputOption: 'RAW',
       requestBody: {
         values: [
-          ['Name', 'Address', 'Latitude', 'Longitude', 'Phone', 'Website'],
+          ['Name', 'Address', 'Phone', 'Website', 'Search Categories', 'Latitude', 'Longitude',],
           ...rows
         ],
       },
@@ -164,6 +165,31 @@ app.post('/api/export-to-sheet', async (req, res) => {
     res.status(500).json({ error: 'Failed to write to Google Sheet' });
   }
 });
+
+// Add this alongside your other Express routes
+app.post('/api/check-sheet', async (req, res) => {
+  const { sheetId } = req.body;
+
+  if (!sheetId) {
+    return res.status(400).json({ error: 'Missing sheet ID' });
+  }
+
+  try {
+    const metadata = await sheets.spreadsheets.get({
+      spreadsheetId: sheetId,
+    });
+
+    if (metadata) {
+      res.json({ valid: true });
+    } else {
+      res.status(404).json({ error: 'Sheet not found' });
+    }
+  } catch (err) {
+    console.error('Sheet check failed:', err);
+    res.status(500).json({ error: 'Could not access Google Sheet' });
+  }
+});
+
 
 
 // Start the server

@@ -8,6 +8,7 @@ import tomtomCategoriesRaw from '../data/tomtomCategories.json';
 
 const SearchFilters = ({ radius, setRadius, categorySet, setCategorySet, onSearch }) => {
   const radiusOptions = [
+    { value: 500, label: '500 m' },
     { value: 1000, label: '1 km' },
     { value: 3000, label: '3 km' },
     { value: 5000, label: '5 km' },
@@ -31,7 +32,7 @@ const SearchFilters = ({ radius, setRadius, categorySet, setCategorySet, onSearc
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }} style={{ width: '40vw', padding: '20px'}}>
+    <Box component="form" onSubmit={handleSubmit}  style={{ width: '40vw', paddingLeft: '10px', paddingRight: '10px'}}>
       <Box sx={{ mb: 2 }}>
         <Autocomplete
           multiple
@@ -50,7 +51,7 @@ const SearchFilters = ({ radius, setRadius, categorySet, setCategorySet, onSearc
         />
       </Box>
 
-      <Box sx={{ mb: 2 }}>
+      <Box sx={{ mb: .5 }}>
         <TextField
           select
           label="Search Radius"

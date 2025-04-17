@@ -30,7 +30,7 @@ const PoiList = ({ results, center }) => {
   });
 
   return (
-    <div style={{ padding: '1rem' }}>
+    <div style={{ padding: '1rem', maxHeight: '38vh', overflowY: 'auto', border: '1px solid #ddd' }}>
       <h2 style={{ marginBottom: '1rem', fontSize: '1.2rem' }}>
         {sortedResults.length} Places Found
       </h2>
@@ -48,7 +48,7 @@ const PoiList = ({ results, center }) => {
                   place.position.lon
                 ).toFixed(2)
               : null;
-
+  
           return (
             <li
               key={place.id || index}

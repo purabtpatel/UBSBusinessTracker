@@ -5,16 +5,15 @@ import SearchFilters from './components/SearchFilters';
 import PoiList from './components/PoiList';
 import { Grow } from '@mui/material';
 import './App.css';
+import GoogleSheetExport from './components/GoogleSheetExport';
 
 const App = () => {
   const [center, setCenter] = useState({ lat: 37.7749, lon: -122.4194 }); // Default SF
   const [pois, setPois] = useState([]);
   const [radius, setRadius] = useState(5000);
   const [categorySet, setCategorySet] = useState('');
+  const [address, setAddress] = useState('');
 
-  useEffect(() => {
-    console.log('Pois updated:', pois);
-  }, [pois]);
 
   const handleAddressSearch = async (address) => {
     try {
@@ -30,18 +29,31 @@ const App = () => {
     }
   };
 
-  const handleMapClick = (coords) => {
+  const handleMapClick = async (coords) => {
     setCenter(coords);
+
+    try{
+      const res = await fetch('http://localhost:3001/api/reverse-geocode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(coords)
+      });
+      const data = await res.json();
+
+      setAddress(data.address); // Assuming the API returns a display name
+      console.log('Reverse geocode data:', data);
+
+    }catch (err) {
+      console.error('Reverse geocoding error:', err);
+    }
   };
 
   const handleFilterSearch = async ({ radius, categorySet }) => {
-    console.log('Filter search:', { radius, categorySet, center });
     setRadius(radius);
     setCategorySet(categorySet);
 
     try {
       if (!categorySet) {
-        console.log('No category set, using nearby search');
         const res = await fetch('http://localhost:3001/api/places-nearby', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -54,7 +66,6 @@ const App = () => {
         const data = await res.json();
         setPois(data.results); // ✅ This works because "places-nearby" returns { results: [...] }
       } else {
-        console.log('Category set:', categorySet);
         const res = await fetch('http://localhost:3001/api/places', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -79,7 +90,7 @@ const App = () => {
       <h3 className="app-title">Business Finder</h3>
 
 
-      <AddressSearchBar onSearch={handleAddressSearch} />
+      <AddressSearchBar onSearch={handleAddressSearch} address={address} setAddress={setAddress} />
 
 
       <div className="map-filter-container">
@@ -98,6 +109,7 @@ const App = () => {
             setCategorySet={setCategorySet}
             onSearch={handleFilterSearch}
           />
+          <GoogleSheetExport pois={pois} />
           <PoiList key={JSON.stringify(center)} results={pois} center={center} />
         </div>
       </div>

@@ -1,44 +1,39 @@
 [
   {
     "type": "POI",
-    "id": "Lg7uDhID_1CLG0pLEj6QmA",
-    "score": 0.9948544502,
-    "dist": 550.947345,
-    "info": "search:ta:840067000059777-US",
-    "matchConfidence": {
-      "score": 1
-    },
+    "id": "AP8D-PlraCVvDqbgKPwjpA",
+    "score": 100,
+    "dist": 0,
+    "info": "search:ta:840066000150518-US",
     "poi": {
-      "name": "Sf Oasis",
-      "phone": "+1 415-795-3180",
+      "name": "Riu Plaza",
       "categorySet": [
         {
-          "id": 9379004
+          "id": 7314003
         }
       ],
       "categories": [
-        "bar",
-        "nightlife"
+        "hotel",
+        "hotel/motel"
       ],
       "classifications": [
         {
-          "code": "NIGHTLIFE",
+          "code": "HOTEL_MOTEL",
           "names": [
             {
               "nameLocale": "en-US",
-              "name": "bar"
+              "name": "hotel/motel"
             },
             {
               "nameLocale": "en-US",
-              "name": "nightlife"
+              "name": "hotel"
             }
           ]
         }
       ]
     },
     "address": {
-      "streetNumber": "298",
-      "streetName": "11th Street",
+      "streetName": "South Van Ness Avenue",
       "municipality": "San Francisco",
       "neighbourhood": "Mission",
       "countrySecondarySubdivision": "San Francisco",
@@ -46,70 +41,300 @@
       "countrySubdivisionName": "California",
       "countrySubdivisionCode": "CA",
       "postalCode": "94103",
-      "extendedPostalCode": "94103-3730",
+      "extendedPostalCode": "94103-1227",
       "countryCode": "US",
       "country": "United States",
       "countryCodeISO3": "USA",
-      "freeformAddress": "298 11th Street, San Francisco, CA 94103",
+      "freeformAddress": "South Van Ness Avenue, San Francisco, CA 94103",
       "localName": "San Francisco"
     },
     "position": {
-      "lat": 37.771895,
-      "lon": -122.414416
+      "lat": 37.7749,
+      "lon": -122.4194
     },
     "viewport": {
       "topLeftPoint": {
-        "lat": 37.77279,
-        "lon": -122.41555
+        "lat": 37.7758,
+        "lon": -122.42054
       },
       "btmRightPoint": {
-        "lat": 37.771,
-        "lon": -122.41328
+        "lat": 37.774,
+        "lon": -122.41826
       }
     },
     "entryPoints": [
       {
         "type": "main",
         "position": {
-          "lat": 37.77206,
-          "lon": -122.41429
+          "lat": 37.77493,
+          "lon": -122.41928
         }
       }
     ]
   },
   {
     "type": "POI",
-    "id": "u-mOYdLhQDPEjrFtDCfJlA",
-    "score": 0.9893926978,
-    "dist": 3.769872,
-    "info": "search:ta:840066001003305-US",
-    "matchConfidence": {
-      "score": 1
-    },
+    "id": "ZsVsq2T6LmXkuQrNldxJWQ",
+    "score": 99.9972610474,
+    "dist": 2.73727,
+    "info": "search:ta:840066001013349-US",
     "poi": {
-      "name": "Penelope's Coffee & Tea",
-      "phone": "+1 415-735-7537",
+      "name": "Ru Huang Voice Studio",
+      "phone": "+1 510-919-3828",
       "categorySet": [
         {
-          "id": 9376002
+          "id": 7372008
         }
       ],
-      "url": "penelopescoffee.com/",
+      "url": "justinmontigne.com",
       "categories": [
-        "café",
-        "café/pub"
+        "school",
+        "vocational training"
       ],
       "classifications": [
         {
-          "code": "CAFE_PUB",
+          "code": "SCHOOL",
           "names": [
             {
               "nameLocale": "en-US",
-              "name": "café/pub"
+              "name": "vocational training"
             },
             {
               "nameLocale": "en-US",
-              "name": "café"
+              "name": "school"
+            }
+          ]
+        }
+      ]
+    },
+    "address": {
+      "streetNumber": "19",
+      "streetName": "Polk Street",
+      "municipality": "San Francisco",
+      "neighbourhood": "Mission",
+      "countrySecondarySubdivision": "San Francisco",
+      "countrySubdivision": "CA",
+      "countrySubdivisionName": "California",
+      "countrySubdivisionCode": "CA",
+      "postalCode": "94102",
+      "extendedPostalCode": "94102-5201",
+      "countryCode": "US",
+      "country": "United States",
+      "countryCodeISO3": "USA",
+      "freeformAddress": "19 Polk Street, San Francisco, CA 94102",
+      "localName": "San Francisco"
+    },
+    "position": {
+      "lat": 37.774923,
+      "lon": -122.419411
+    },
+    "viewport": {
+      "topLeftPoint": {
+        "lat": 37.77582,
+        "lon": -122.42055
+      },
+      "btmRightPoint": {
+        "lat": 37.77402,
+        "lon": -122.41827
+      }
+    },
+    "entryPoints": [
+      {
+        "type": "main",
+        "position": {
+          "lat": 37.77495,
+          "lon": -122.41943
+        }
+      }
+    ]
+  },
+  {
+    "type": "POI",
+    "id": "LZxl3lDBR26Iql-gHUhuVA",
+    "score": 99.9964981079,
+    "dist": 3.495114,
+    "info": "search:ta:840066001010632-US",
+    "poi": {
+      "name": "Lucky Cat Cafe",
+      "phone": "+1 877-811-9024",
+      "categorySet": [
+        {
+          "id": 9361006
+        }
+      ],
+      "url": "www.coni17.com/",
+      "categories": [
+        "clothing accessories: general",
+        "shop"
+      ],
+      "classifications": [
+        {
+          "code": "SHOP",
+          "names": [
+            {
+              "nameLocale": "en-US",
+              "name": "clothing accessories: general"
+            },
+            {
+              "nameLocale": "en-US",
+              "name": "shop"
+            }
+          ]
+        }
+      ]
+    },
+    "address": {
+      "streetNumber": "1500",
+      "streetName": "Market Street",
+      "municipality": "San Francisco",
+      "neighbourhood": "Hayes Valley",
+      "countrySecondarySubdivision": "San Francisco",
+      "countrySubdivision": "CA",
+      "countrySubdivisionName": "California",
+      "countrySubdivisionCode": "CA",
+      "postalCode": "94102",
+      "extendedPostalCode": "94102-6007",
+      "countryCode": "US",
+      "country": "United States",
+      "countryCodeISO3": "USA",
+      "freeformAddress": "1500 Market Street, San Francisco, CA 94102",
+      "localName": "San Francisco"
+    },
+    "position": {
+      "lat": 37.774928,
+      "lon": -122.419382
+    },
+    "viewport": {
+      "topLeftPoint": {
+        "lat": 37.77583,
+        "lon": -122.42052
+      },
+      "btmRightPoint": {
+        "lat": 37.77403,
+        "lon": -122.41824
+      }
+    },
+    "entryPoints": [
+      {
+        "type": "main",
+        "position": {
+          "lat": 37.77507,
+          "lon": -122.4195
+        }
+      }
+    ]
+  },
+  {
+    "type": "POI",
+    "id": "ETsjhdZjSYE8604pneO5ZA",
+    "score": 99.9964904785,
+    "dist": 3.513505,
+    "info": "search:ta:840066000982465-US",
+    "poi": {
+      "name": "Astranda Bakery",
+      "phone": "+1 650-871-2515",
+      "categorySet": [
+        {
+          "id": 9361018
+        }
+      ],
+      "url": "boudinbakery.com",
+      "categories": [
+        "food drinks: bakers",
+        "shop"
+      ],
+      "classifications": [
+        {
+          "code": "SHOP",
+          "names": [
+            {
+              "nameLocale": "en-US",
+              "name": "shop"
+            },
+            {
+              "nameLocale": "en-US",
+              "name": "food drinks: bakers"
+            }
+          ]
+        }
+      ]
+    },
+    "address": {
+      "streetNumber": "25",
+      "streetName": "Van Ness Avenue",
+      "municipality": "San Francisco",
+      "neighbourhood": "Hayes Valley",
+      "countrySecondarySubdivision": "San Francisco",
+      "countrySubdivision": "CA",
+      "countrySubdivisionName": "California",
+      "countrySubdivisionCode": "CA",
+      "postalCode": "94102",
+      "extendedPostalCode": "94102-6012",
+      "countryCode": "US",
+      "country": "United States",
+      "countryCodeISO3": "USA",
+      "freeformAddress": "25 Van Ness Avenue, San Francisco, CA 94102",
+      "localName": "San Francisco"
+    },
+    "position": {
+      "lat": 37.77493,
+      "lon": -122.419413
+    },
+    "viewport": {
+      "topLeftPoint": {
+        "lat": 37.77583,
+        "lon": -122.42055
+      },
+      "btmRightPoint": {
+        "lat": 37.77403,
+        "lon": -122.41828
+      }
+    },
+    "entryPoints": [
+      {
+        "type": "main",
+        "position": {
+          "lat": 37.77565,
+          "lon": -122.41944
+        }
+      }
+    ]
+  },
+  {
+    "type": "POI",
+    "id": "lNFBpE5h3CvcpCOZ8yRgyg",
+    "score": 99.9964447021,
+    "dist": 3.549365,
+    "info": "search:ta:840066000952940-US",
+    "poi": {
+      "name": "Kpmg",
+      "phone": "+1 415-963-5100",
+      "brands": [
+        {
+          "name": "KPMG"
+        }
+      ],
+      "categorySet": [
+        {
+          "id": 9352039
+        }
+      ],
+      "url": "kpmg.com/al/en/home/about/offices/san-francisco-1.html",
+      "categories": [
+        "company",
+        "services"
+      ],
+      "classifications": [
+        {
+          "code": "COMPANY",
+          "names": [
+            {
+              "nameLocale": "en-US",
+              "name": "services"
+            },
+            {
+              "nameLocale": "en-US",
+              "name": "company"
             }
           ]
         }
@@ -123,21 +348,22 @@
       "countrySubdivision": "CA",
       "countrySubdivisionName": "California",
       "countrySubdivisionCode": "CA",
-      "postalCode": "94105",
+      "postalCode": "90071",
+      "extendedPostalCode": "90071-2629",
       "countryCode": "US",
       "country": "United States",
       "countryCodeISO3": "USA",
-      "freeformAddress": "Market Street, San Francisco, CA 94105",
+      "freeformAddress": "Market Street, San Francisco, CA 90071",
       "localName": "San Francisco"
     },
     "position": {
-      "lat": 37.77493,
-      "lon": -122.41942
+      "lat": 37.774929,
+      "lon": -122.419416
     },
     "viewport": {
       "topLeftPoint": {
         "lat": 37.77583,
-        "lon": -122.42056
+        "lon": -122.42055
       },
       "btmRightPoint": {
         "lat": 37.77403,
@@ -156,195 +382,98 @@
   },
   {
     "type": "POI",
-    "id": "1Lpwk-Au_eaNFNCjkFch4g",
-    "score": 0.9879567027,
-    "dist": 198.542673,
-    "info": "search:ta:840067000226021-US",
-    "matchConfidence": {
-      "score": 1
-    },
+    "id": "U3jMzlHrODRbCqgX5icisA",
+    "score": 99.9963989258,
+    "dist": 3.599754,
+    "info": "search:ta:840066001011388-US",
     "poi": {
-      "name": "The Madrigal",
-      "phone": "+1 415-796-2531",
+      "name": "Tinglado Parroquial-Templo San Francisco de Asis",
       "categorySet": [
         {
-          "id": 9379004
+          "id": 7339
         }
       ],
-      "url": "www.themadrigalsf.com/",
       "categories": [
-        "bar",
-        "nightlife"
+        "place of worship"
       ],
       "classifications": [
         {
-          "code": "NIGHTLIFE",
+          "code": "PLACE_OF_WORSHIP",
           "names": [
             {
               "nameLocale": "en-US",
-              "name": "bar"
-            },
-            {
-              "nameLocale": "en-US",
-              "name": "nightlife"
+              "name": "place of worship"
             }
           ]
         }
       ]
     },
     "address": {
-      "streetNumber": "100",
-      "streetName": "Van Ness Avenue",
+      "streetNumber": "1580",
+      "streetName": "Market Street",
       "municipality": "San Francisco",
-      "neighbourhood": "Civic Center Tenderloin",
+      "neighbourhood": "Mission",
       "countrySecondarySubdivision": "San Francisco",
       "countrySubdivision": "CA",
       "countrySubdivisionName": "California",
       "countrySubdivisionCode": "CA",
       "postalCode": "94102",
-      "extendedPostalCode": "94102-5209",
+      "extendedPostalCode": "94102-6007",
       "countryCode": "US",
       "country": "United States",
       "countryCodeISO3": "USA",
-      "freeformAddress": "100 Van Ness Avenue, San Francisco, CA 94102",
+      "freeformAddress": "1580 Market Street, San Francisco, CA 94102",
       "localName": "San Francisco"
     },
     "position": {
-      "lat": 37.77668,
-      "lon": -122.419222
+      "lat": 37.774929,
+      "lon": -122.419418
     },
     "viewport": {
       "topLeftPoint": {
-        "lat": 37.77758,
-        "lon": -122.42036
+        "lat": 37.77583,
+        "lon": -122.42056
       },
       "btmRightPoint": {
-        "lat": 37.77578,
-        "lon": -122.41808
+        "lat": 37.77403,
+        "lon": -122.41828
       }
     },
     "entryPoints": [
       {
         "type": "main",
         "position": {
-          "lat": 37.77662,
-          "lon": -122.41948
+          "lat": 37.77451,
+          "lon": -122.42018
         }
       }
     ]
   },
   {
     "type": "POI",
-    "id": "7UVlqNcDBW9ci13NCOMhwQ",
-    "score": 0.9868114591,
-    "dist": 409.143258,
-    "info": "search:ta:840066001003638-US",
-    "matchConfidence": {
-      "score": 1
-    },
+    "id": "HdRXXkct2l805vxiU2z2HA",
+    "score": 99.9963760376,
+    "dist": 3.618203,
+    "info": "search:ta:840066000942855-US",
     "poi": {
-      "name": "Dobbs Bar",
-      "phone": "+1 415-551-7700",
+      "name": "Superfirms",
+      "phone": "+1 949-288-3523",
       "categorySet": [
         {
-          "id": 9379004
+          "id": 7332
         }
       ],
-      "url": "www.dobbsferrysf.com",
+      "url": "superfirms.co",
       "categories": [
-        "bar",
-        "nightlife"
+        "market"
       ],
       "classifications": [
         {
-          "code": "NIGHTLIFE",
+          "code": "MARKET",
           "names": [
             {
               "nameLocale": "en-US",
-              "name": "bar"
-            },
-            {
-              "nameLocale": "en-US",
-              "name": "nightlife"
-            }
-          ]
-        }
-      ]
-    },
-    "address": {
-      "streetNumber": "406",
-      "streetName": "Hayes Street",
-      "municipality": "San Francisco",
-      "neighbourhood": "Hayes Valley",
-      "countrySecondarySubdivision": "San Francisco",
-      "countrySubdivision": "CA",
-      "countrySubdivisionName": "California",
-      "countrySubdivisionCode": "CA",
-      "postalCode": "94102",
-      "extendedPostalCode": "94102-4309",
-      "countryCode": "US",
-      "country": "United States",
-      "countryCodeISO3": "USA",
-      "freeformAddress": "406 Hayes Street, San Francisco, CA 94102",
-      "localName": "San Francisco"
-    },
-    "position": {
-      "lat": 37.77698,
-      "lon": -122.42324
-    },
-    "viewport": {
-      "topLeftPoint": {
-        "lat": 37.77788,
-        "lon": -122.42438
-      },
-      "btmRightPoint": {
-        "lat": 37.77608,
-        "lon": -122.4221
-      }
-    },
-    "entryPoints": [
-      {
-        "type": "main",
-        "position": {
-          "lat": 37.77684,
-          "lon": -122.42323
-        }
-      }
-    ]
-  },
-  {
-    "type": "POI",
-    "id": "YPQjpkNRaSP5pLTQUgiBUA",
-    "score": 0.9864020944,
-    "dist": 419.04077,
-    "info": "search:ta:840067000229336-US",
-    "matchConfidence": {
-      "score": 1
-    },
-    "poi": {
-      "name": "Maxfield's Bar",
-      "phone": "+1 415-392-8600",
-      "categorySet": [
-        {
-          "id": 9379004
-        }
-      ],
-      "url": "www.sfpalacerestaurants.com/maxfields",
-      "categories": [
-        "bar",
-        "nightlife"
-      ],
-      "classifications": [
-        {
-          "code": "NIGHTLIFE",
-          "names": [
-            {
-              "nameLocale": "en-US",
-              "name": "bar"
-            },
-            {
-              "nameLocale": "en-US",
-              "name": "nightlife"
+              "name": "market"
             }
           ]
         }
@@ -353,88 +482,78 @@
     "address": {
       "streetName": "Market Street",
       "municipality": "San Francisco",
-      "neighbourhood": "Civic Center Tenderloin",
+      "neighbourhood": "Mission",
       "countrySecondarySubdivision": "San Francisco",
       "countrySubdivision": "CA",
       "countrySubdivisionName": "California",
       "countrySubdivisionCode": "CA",
-      "postalCode": "94102",
+      "postalCode": "94103",
       "countryCode": "US",
       "country": "United States",
       "countryCodeISO3": "USA",
-      "freeformAddress": "Market Street, San Francisco, CA 94102",
+      "freeformAddress": "Market Street, San Francisco, CA 94103",
       "localName": "San Francisco"
     },
     "position": {
-      "lat": 37.77765,
-      "lon": -122.41614
+      "lat": 37.77493,
+      "lon": -122.419416
     },
     "viewport": {
       "topLeftPoint": {
-        "lat": 37.77855,
-        "lon": -122.41728
+        "lat": 37.77583,
+        "lon": -122.42055
       },
       "btmRightPoint": {
-        "lat": 37.77675,
-        "lon": -122.415
+        "lat": 37.77403,
+        "lon": -122.41828
       }
     },
     "entryPoints": [
       {
         "type": "main",
         "position": {
-          "lat": 37.77764,
-          "lon": -122.41613
+          "lat": 37.77495,
+          "lon": -122.41943
         }
       }
     ]
   },
   {
     "type": "POI",
-    "id": "3VqNuqYjEdhE9LnbyXcoQg",
-    "score": 0.9860560894,
-    "dist": 122.731591,
-    "info": "search:ta:840066001100244-US",
-    "matchConfidence": {
-      "score": 1
-    },
+    "id": "Eye6iXbkz4NrRB59sHLW7w",
+    "score": 99.9963760376,
+    "dist": 3.618203,
+    "info": "search:ta:840067000225493-US",
     "poi": {
-      "name": "Blue Bottle Coffee",
-      "phone": "+1 415-956-3331",
-      "brands": [
-        {
-          "name": "Blue Bottle Coffee"
-        }
-      ],
+      "name": "Goodwebnovels",
       "categorySet": [
         {
-          "id": 9376002
+          "id": 9902004
         }
       ],
-      "url": "bluebottlecoffee.com/us/eng/cafes/the-hub",
+      "url": "www.goodwebnovels.com",
       "categories": [
-        "café",
-        "café/pub"
+        "amusement park",
+        "amusement place"
       ],
       "classifications": [
         {
-          "code": "CAFE_PUB",
+          "code": "AMUSEMENT_PARK",
           "names": [
             {
               "nameLocale": "en-US",
-              "name": "café/pub"
+              "name": "amusement place"
             },
             {
               "nameLocale": "en-US",
-              "name": "café"
+              "name": "amusement park"
             }
           ]
         }
       ]
     },
     "address": {
-      "streetNumber": "55",
-      "streetName": "South Van Ness Avenue",
+      "streetName": "Market Street",
       "municipality": "San Francisco",
       "neighbourhood": "Mission",
       "countrySecondarySubdivision": "San Francisco",
@@ -442,334 +561,137 @@
       "countrySubdivisionName": "California",
       "countrySubdivisionCode": "CA",
       "postalCode": "94103",
-      "extendedPostalCode": "94103-1226",
       "countryCode": "US",
       "country": "United States",
       "countryCodeISO3": "USA",
-      "freeformAddress": "55 South Van Ness Avenue, San Francisco, CA 94103",
+      "freeformAddress": "Market Street, San Francisco, CA 94103",
       "localName": "San Francisco"
     },
     "position": {
-      "lat": 37.773982,
-      "lon": -122.418626
+      "lat": 37.77493,
+      "lon": -122.419416
     },
     "viewport": {
       "topLeftPoint": {
-        "lat": 37.77488,
-        "lon": -122.41976
+        "lat": 37.77583,
+        "lon": -122.42055
       },
       "btmRightPoint": {
-        "lat": 37.77308,
-        "lon": -122.41749
+        "lat": 37.77403,
+        "lon": -122.41828
       }
     },
     "entryPoints": [
       {
         "type": "main",
         "position": {
-          "lat": 37.77396,
-          "lon": -122.41886
+          "lat": 37.77495,
+          "lon": -122.41943
         }
       }
     ]
   },
   {
     "type": "POI",
-    "id": "g1vNYXhEnxiaMwdV9dGNAA",
-    "score": 0.9835418463,
-    "dist": 591.957047,
-    "info": "search:ta:840069021315277-US",
-    "matchConfidence": {
-      "score": 1
-    },
+    "id": "r2-OAO6oa-Pm1ZfH1ksosA",
+    "score": 99.9963760376,
+    "dist": 3.618203,
+    "info": "search:ta:840066000699274-US",
     "poi": {
-      "name": "Slim's",
-      "phone": "+1 415-522-0333",
+      "name": "Book My Limo Trip",
+      "phone": "+1 510-926-8658",
       "categorySet": [
         {
-          "id": 9379004
+          "id": 9352
         }
       ],
-      "url": "www.slims-sf.com/",
+      "url": "bookmylimotrip.com/",
       "categories": [
-        "bar",
-        "nightlife"
+        "company"
       ],
       "classifications": [
         {
-          "code": "NIGHTLIFE",
+          "code": "COMPANY",
           "names": [
             {
               "nameLocale": "en-US",
-              "name": "bar"
-            },
-            {
-              "nameLocale": "en-US",
-              "name": "nightlife"
+              "name": "company"
             }
           ]
         }
       ]
     },
     "address": {
-      "streetName": "11th Street",
+      "streetName": "Market Street",
       "municipality": "San Francisco",
-      "neighbourhood": "South of Market",
+      "neighbourhood": "Mission",
       "countrySecondarySubdivision": "San Francisco",
       "countrySubdivision": "CA",
       "countrySubdivisionName": "California",
       "countrySubdivisionCode": "CA",
-      "postalCode": "94103",
-      "extendedPostalCode": "94103-4313",
+      "postalCode": "94587",
       "countryCode": "US",
       "country": "United States",
       "countryCodeISO3": "USA",
-      "freeformAddress": "11th Street, San Francisco, CA 94103",
+      "freeformAddress": "Market Street, San Francisco, CA 94587",
       "localName": "San Francisco"
     },
     "position": {
-      "lat": 37.77186,
-      "lon": -122.413871
+      "lat": 37.77493,
+      "lon": -122.419416
     },
     "viewport": {
       "topLeftPoint": {
-        "lat": 37.77276,
-        "lon": -122.41501
+        "lat": 37.77583,
+        "lon": -122.42055
       },
       "btmRightPoint": {
-        "lat": 37.77096,
-        "lon": -122.41273
+        "lat": 37.77403,
+        "lon": -122.41828
       }
     },
     "entryPoints": [
       {
         "type": "main",
         "position": {
-          "lat": 37.77188,
-          "lon": -122.41401
-        }
-      },
-      {
-        "type": "main",
-        "position": {
-          "lat": 37.77129,
-          "lon": -122.41331
+          "lat": 37.77495,
+          "lon": -122.41943
         }
       }
     ]
   },
   {
     "type": "POI",
-    "id": "gsDKmWzzNmE09cIRRRuY9g",
-    "score": 0.9835418463,
-    "dist": 824.23572,
-    "info": "search:ta:840067000503805-US",
-    "matchConfidence": {
-      "score": 1
-    },
+    "id": "tCboToIRoLMOGXfQS0s-jg",
+    "score": 99.9963760376,
+    "dist": 3.618203,
+    "info": "search:ta:840066001012233-US",
     "poi": {
-      "name": "Cat Club",
-      "phone": "+1 415-703-8965",
+      "name": "Customwritings",
+      "phone": "+1 855-655-4828",
       "categorySet": [
         {
-          "id": 9379004
+          "id": 7363
         }
       ],
-      "url": "www.sfcatclub.com/",
+      "url": "www.customwritings.com/",
       "categories": [
-        "bar",
-        "nightlife"
+        "community center"
       ],
       "classifications": [
         {
-          "code": "NIGHTLIFE",
+          "code": "COMMUNITY_CENTER",
           "names": [
             {
               "nameLocale": "en-US",
-              "name": "bar"
-            },
-            {
-              "nameLocale": "en-US",
-              "name": "nightlife"
+              "name": "community center"
             }
           ]
         }
       ]
     },
     "address": {
-      "streetNumber": "1190",
-      "streetName": "Folsom Street",
-      "municipality": "San Francisco",
-      "neighbourhood": "South of Market",
-      "countrySecondarySubdivision": "San Francisco",
-      "countrySubdivision": "CA",
-      "countrySubdivisionName": "California",
-      "countrySubdivisionCode": "CA",
-      "postalCode": "94103",
-      "extendedPostalCode": "94103-3927",
-      "countryCode": "US",
-      "country": "United States",
-      "countryCodeISO3": "USA",
-      "freeformAddress": "1190 Folsom Street, San Francisco, CA 94103",
-      "localName": "San Francisco"
-    },
-    "position": {
-      "lat": 37.775472,
-      "lon": -122.41005
-    },
-    "viewport": {
-      "topLeftPoint": {
-        "lat": 37.77637,
-        "lon": -122.41119
-      },
-      "btmRightPoint": {
-        "lat": 37.77457,
-        "lon": -122.40891
-      }
-    },
-    "entryPoints": [
-      {
-        "type": "main",
-        "position": {
-          "lat": 37.77518,
-          "lon": -122.40982
-        }
-      },
-      {
-        "type": "main",
-        "position": {
-          "lat": 37.77524,
-          "lon": -122.40975
-        }
-      }
-    ]
-  },
-  {
-    "type": "POI",
-    "id": "_Gf3qB_JalA1ouIxPJ6x6Q",
-    "score": 0.9835418463,
-    "dist": 826.184674,
-    "info": "search:ta:840067000219852-US",
-    "matchConfidence": {
-      "score": 1
-    },
-    "poi": {
-      "name": "New Wave City",
-      "phone": "+1 415-993-4692",
-      "categorySet": [
-        {
-          "id": 9379004
-        }
-      ],
-      "url": "newwavecity.com",
-      "categories": [
-        "bar",
-        "nightlife"
-      ],
-      "classifications": [
-        {
-          "code": "NIGHTLIFE",
-          "names": [
-            {
-              "nameLocale": "en-US",
-              "name": "bar"
-            },
-            {
-              "nameLocale": "en-US",
-              "name": "nightlife"
-            }
-          ]
-        }
-      ]
-    },
-    "address": {
-      "streetNumber": "1190",
-      "streetName": "Folsom Street",
-      "municipality": "San Francisco",
-      "neighbourhood": "South of Market",
-      "countrySecondarySubdivision": "San Francisco",
-      "countrySubdivision": "CA",
-      "countrySubdivisionName": "California",
-      "countrySubdivisionCode": "CA",
-      "postalCode": "94103",
-      "extendedPostalCode": "94103-3927",
-      "countryCode": "US",
-      "country": "United States",
-      "countryCodeISO3": "USA",
-      "freeformAddress": "1190 Folsom Street, San Francisco, CA 94103",
-      "localName": "San Francisco"
-    },
-    "position": {
-      "lat": 37.775454,
-      "lon": -122.410026
-    },
-    "viewport": {
-      "topLeftPoint": {
-        "lat": 37.77635,
-        "lon": -122.41116
-      },
-      "btmRightPoint": {
-        "lat": 37.77455,
-        "lon": -122.40889
-      }
-    },
-    "entryPoints": [
-      {
-        "type": "main",
-        "position": {
-          "lat": 37.77519,
-          "lon": -122.40981
-        }
-      },
-      {
-        "type": "main",
-        "position": {
-          "lat": 37.77524,
-          "lon": -122.40975
-        }
-      }
-    ]
-  },
-  {
-    "type": "POI",
-    "id": "t_RgdmyMQYyKjPw3bd6c5w",
-    "score": 0.982288003,
-    "dist": 168.956643,
-    "info": "search:ta:840066001003808-US",
-    "matchConfidence": {
-      "score": 1
-    },
-    "poi": {
-      "name": "Bar Agricole",
-      "phone": "+1 415-341-0101",
-      "categorySet": [
-        {
-          "id": 9379004
-        }
-      ],
-      "categories": [
-        "bar",
-        "nightlife"
-      ],
-      "classifications": [
-        {
-          "code": "NIGHTLIFE",
-          "names": [
-            {
-              "nameLocale": "en-US",
-              "name": "bar"
-            },
-            {
-              "nameLocale": "en-US",
-              "name": "nightlife"
-            }
-          ]
-        }
-      ]
-    },
-    "address": {
-      "streetNumber": "1540",
-      "streetName": "Mission Street",
+      "streetName": "Market Street",
       "municipality": "San Francisco",
       "neighbourhood": "Mission",
       "countrySecondarySubdivision": "San Francisco",
@@ -777,33 +699,32 @@
       "countrySubdivisionName": "California",
       "countrySubdivisionCode": "CA",
       "postalCode": "94103",
-      "extendedPostalCode": "94103-2513",
       "countryCode": "US",
       "country": "United States",
       "countryCodeISO3": "USA",
-      "freeformAddress": "1540 Mission Street, San Francisco, CA 94103",
+      "freeformAddress": "Market Street, San Francisco, CA 94103",
       "localName": "San Francisco"
     },
     "position": {
-      "lat": 37.774119,
-      "lon": -122.417751
+      "lat": 37.77493,
+      "lon": -122.419416
     },
     "viewport": {
       "topLeftPoint": {
-        "lat": 37.77502,
-        "lon": -122.41889
+        "lat": 37.77583,
+        "lon": -122.42055
       },
       "btmRightPoint": {
-        "lat": 37.77322,
-        "lon": -122.41661
+        "lat": 37.77403,
+        "lon": -122.41828
       }
     },
     "entryPoints": [
       {
         "type": "main",
         "position": {
-          "lat": 37.77372,
-          "lon": -122.41785
+          "lat": 37.77495,
+          "lon": -122.41943
         }
       }
     ]

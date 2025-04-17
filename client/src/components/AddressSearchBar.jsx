@@ -4,8 +4,8 @@ import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 
-const AddressSearchBar = ({ onSearch }) => {
-  const [address, setAddress] = useState('');
+const AddressSearchBar = ({ onSearch, address, setAddress }) => {
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
