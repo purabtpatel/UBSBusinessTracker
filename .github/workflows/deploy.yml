@@ -32,24 +32,28 @@ jobs:
           username: ${{ secrets.LIGHTSAIL_USER }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
-            # Prepare directories
+            # Set up folders
             mkdir -p ~/app/client ~/app/server ~/app/build
 
-            # Optional: Clean up old client/server dirs if needed
-            # rm -rf ~/app/client/* ~/app/server/*
+            # Write .env files and credentials
+            echo "VITE_TOMTOM_API_KEY=${{ secrets.VITE_TOMTOM_API_KEY }}" > ~/app/client/.env
+            echo "TOMTOM_API_KEY=${{ secrets.TOMTOM_API_KEY }}" > ~/app/server/.env
+            echo "${{ secrets.CREDENTIALS_JSON }}" | base64 -d > ~/app/server/credentials.json
 
             # Build client
             cd ~/app/client
             npm install
             npm run build
 
-            # Deploy client static files
+            # Deploy client
             sudo mkdir -p /var/www/poi-app
             sudo rm -rf /var/www/poi-app/*
             sudo cp -r dist/* /var/www/poi-app/
 
-            # Start/Restart server
+            # Set up server
             cd ~/app/server
             npm install
+
+            # Start or restart server
             pm2 start index.js --name poi-server --watch -- --port 3001 || pm2 restart poi-server
             pm2 save
