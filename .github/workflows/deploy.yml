@@ -2,18 +2,20 @@ name: Deploy to Lightsail
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repo
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Copy files to Lightsail
+    - name: Install rsync
+      run: sudo apt-get install rsync
+
+    - name: Upload files to Lightsail
       uses: appleboy/scp-action@v0.1.7
       with:
         host: ${{ secrets.LIGHTSAIL_HOST }}
@@ -22,18 +24,91 @@ jobs:
         source: "."
         target: "~/app"
 
-    - name: SSH into Lightsail and deploy
+    - name: SSH into instance and build/deploy
       uses: appleboy/ssh-action@v0.1.10
       with:
         host: ${{ secrets.LIGHTSAIL_HOST }}
         username: ${{ secrets.LIGHTSAIL_USER }}
         key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
         script: |
-          cd ~/app
-          npm install --prefix server
-          npm install --prefix client
-          npm run build --prefix client
-          cp -r client/dist server/public
-          pm2 start server/index.js --name poi-server || pm2 restart poi-server
+          # Set up folders
+          mkdir -p ~/app/client ~/app/server ~/app/build
+
+          # Move files into proper places
+          mv ~/app/client/* ~/app/client/
+          mv ~/app/server/* ~/app/server/
+
+          # Build client
+          cd ~/app/client
+          npm install
+          npm run build
+
+          # Copy static files to public web root
+          sudo mkdir -p /var/www/poi-app
+          sudo rm -rf /var/www/poi-app/*
+          sudo cp -r dist/* /var/www/poi-app/
+
+          # Set up server
+          cd ~/app/server
+          npm install
+
+          # Restart server (localhost only)
+          pm2 start index.js --name poi-server --watch -- --port 3001 || pm2 restart poi-server
           pm2 save
-          
+name: Deploy to Lightsail
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install rsync
+      run: sudo apt-get install rsync
+
+    - name: Upload files to Lightsail
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.LIGHTSAIL_HOST }}
+        username: ${{ secrets.LIGHTSAIL_USER }}
+        key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+        source: "."
+        target: "~/app"
+
+    - name: SSH into instance and build/deploy
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.LIGHTSAIL_HOST }}
+        username: ${{ secrets.LIGHTSAIL_USER }}
+        key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+        script: |
+          # Set up folders
+          mkdir -p ~/app/client ~/app/server ~/app/build
+
+          # Move files into proper places
+          mv ~/app/client/* ~/app/client/
+          mv ~/app/server/* ~/app/server/
+
+          # Build client
+          cd ~/app/client
+          npm install
+          npm run build
+
+          # Copy static files to public web root
+          sudo mkdir -p /var/www/poi-app
+          sudo rm -rf /var/www/poi-app/*
+          sudo cp -r dist/* /var/www/poi-app/
+
+          # Set up server
+          cd ~/app/server
+          npm install
+
+          # Restart server (localhost only)
+          pm2 start index.js --name poi-server --watch -- --port 3001 || pm2 restart poi-server
+          pm2 save
