@@ -15,22 +15,25 @@ const AddressSearchBar = ({ onSearch }) => {
   };
 
   return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px', marginBottom: '20px' }}>
+
     <Paper
       component="form"
       onSubmit={handleSubmit}
-      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: '100%', maxWidth: 600, mb: 2 }}
-    >
+      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', flexGrow: 1}}
+      >
       <InputBase
         sx={{ ml: 1, flex: 1 }}
         placeholder="Enter address..."
         value={address}
         onChange={(e) => setAddress(e.target.value)}
         inputProps={{ 'aria-label': 'enter address' }}
-      />
+        />
       <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
         <SearchIcon />
       </IconButton>
     </Paper>
+        </div>
   );
 };
 

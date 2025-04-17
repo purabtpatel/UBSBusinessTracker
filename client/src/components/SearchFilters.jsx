@@ -15,7 +15,6 @@ const SearchFilters = ({ radius, setRadius, categorySet, setCategorySet, onSearc
   ];
 
   const categoryOptions = tomtomCategoriesRaw
-    .filter(cat => cat.id.toString().length <= 4)
     .map(cat => ({
       value: cat.id.toString(),
       label: cat.name
@@ -32,7 +31,7 @@ const SearchFilters = ({ radius, setRadius, categorySet, setCategorySet, onSearc
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }} style={{ width: '40vw', padding: '20px'}}>
       <Box sx={{ mb: 2 }}>
         <Autocomplete
           multiple

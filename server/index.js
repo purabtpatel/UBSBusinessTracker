@@ -32,6 +32,8 @@ app.post('/api/places', async (req, res) => {
     const data = await response.json();
 
     const results = filterUSResults(data.results || []);
+    //write to ./Sample.json
+    fs.writeFileSync('./Sample.json', JSON.stringify(results, null, 2), 'utf-8');
     res.json(results);
   } catch (error) {
     console.error('Error fetching places:', error);
@@ -42,6 +44,28 @@ app.post('/api/places', async (req, res) => {
 
 const filterUSResults = results =>
   results.filter(place => place.address?.countryCodeISO3 === 'USA');
+
+
+app.post('/api/places-nearby', async (req, res) => {
+  const { lat, lon, radius } = req.body;
+  console.log('Received request for nearby places:', { lat, lon, radius });
+  const apiUrl = `https://api.tomtom.com/search/2/nearbySearch/.json?key=${TOMTOM_API_KEY}&lat=${lat}&lon=${lon}&radius=${radius}`;
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      const errorBody = await response.text(); // Get error details from TomTom if available
+      console.error(`TomTom API Error: ${response.status} ${response.statusText}`, errorBody);
+      throw new Error(`TomTom API request failed with status ${response.status}`);
+    }
+    const data = await response.json();
+    const results = filterUSResults(data.results || []);
+    fs.writeFileSync('./Sample.json', JSON.stringify(results, null, 2), 'utf-8');
+    res.json(data);
+  } catch (error) {
+    console.error('Error in /api/places-nearby handler:', error);
+    res.status(500).json({ error: 'Failed to fetch nearby places' });
+  }
+});
 
 app.post('/api/categories', async (req, res) => {
   try{
@@ -69,24 +93,6 @@ app.post('/api/categories', async (req, res) => {
     }
 });
 
-app.post('/api/places-nearby', async (req, res) => {
-  const { lat, lon, radius } = req.body;
-  console.log('Received request for nearby places:', { lat, lon, radius });
-  const apiUrl = `https://api.tomtom.com/search/2/nearbySearch/.json?key=${TOMTOM_API_KEY}&lat=${lat}&lon=${lon}&radius=${radius}`;
-  try {
-    const response = await fetch(apiUrl);
-    if (!response.ok) {
-      const errorBody = await response.text(); // Get error details from TomTom if available
-      console.error(`TomTom API Error: ${response.status} ${response.statusText}`, errorBody);
-      throw new Error(`TomTom API request failed with status ${response.status}`);
-    }
-    const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    console.error('Error in /api/places-nearby handler:', error);
-    res.status(500).json({ error: 'Failed to fetch nearby places' });
-  }
-});
 
 app.post('/api/geocode', async (req, res) => {
   const { address } = req.body;

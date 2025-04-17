@@ -236,10 +236,6 @@
         "name": "Amusement Arcade"
     },
     {
-        "id": 9902003,
-        "name": "Amusement Park"
-    },
-    {
         "id": 9902004,
         "name": "Amusement Place"
     },
@@ -520,10 +516,6 @@
         "name": "Car Glass Replacement Shop"
     },
     {
-        "id": 9155002,
-        "name": "Car Wash"
-    },
-    {
         "id": 7360003,
         "name": "Caravan Site"
     },
@@ -582,10 +574,6 @@
     {
         "id": 7339002,
         "name": "Church"
-    },
-    {
-        "id": 7342002,
-        "name": "Movie Theater"
     },
     {
         "id": 9352029,
@@ -932,10 +920,6 @@
         "name": "Fusion Restaurant"
     },
     {
-        "id": 7324002,
-        "name": "Post Office"
-    },
-    {
         "id": 7310004,
         "name": "Car Repair and Service"
     },
@@ -1270,10 +1254,6 @@
     {
         "id": 9352011,
         "name": "Manufacturing Company"
-    },
-    {
-        "id": 7347002,
-        "name": "Marina"
     },
     {
         "id": 9361065,
@@ -1752,10 +1732,6 @@
         "name": "Scandinavian Restaurant"
     },
     {
-        "id": 7372002,
-        "name": "School"
-    },
-    {
         "id": 7315115,
         "name": "Scottish Restaurant"
     },
@@ -1858,10 +1834,6 @@
     {
         "id": 7372011,
         "name": "Sport School"
-    },
-    {
-        "id": 7320004,
-        "name": "Sports Center"
     },
     {
         "id": 9361039,
@@ -1974,10 +1946,6 @@
     {
         "id": 7315048,
         "name": "Thai Restaurant"
-    },
-    {
-        "id": 7318005,
-        "name": "Theater"
     },
     {
         "id": 7320005,
@@ -2094,10 +2062,6 @@
     {
         "id": 7359003,
         "name": "Weigh Scales"
-    },
-    {
-        "id": 7359002,
-        "name": "Weigh Station"
     },
     {
         "id": 8099010,
