@@ -30,10 +30,10 @@ jobs:
         key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
         script: |
           cd ~/app
-          npm install --prefix backend
-          npm install --prefix frontend
-          npm run build --prefix frontend
-          cp -r frontend/dist backend/public
-          pm2 start backend/index.js --name poi-server || pm2 restart poi-server
+          npm install --prefix server
+          npm install --prefix Client
+          npm run build --prefix Client
+          cp -r Client/dist server/public
+          pm2 start server/index.js --name poi-server || pm2 restart poi-server
           pm2 save
           
