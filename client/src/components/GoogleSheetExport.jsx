@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { supabase } from '../supabaseClient';
+
 
 const GoogleSheetExport = ({ pois }) => {
     const [sheetUrl, setSheetUrl] = useState('');
@@ -9,6 +11,12 @@ const GoogleSheetExport = ({ pois }) => {
     const [exporting, setExporting] = useState(false);
     const [message, setMessage] = useState('');
     const [exportStats, setExportStats] = useState(null);
+
+  const getAuthHeader = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token;
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
 
 
     const extractSheetId = (url) => {
@@ -25,9 +33,13 @@ const GoogleSheetExport = ({ pois }) => {
         }
 
         try {
+            const headers = {
+                'Content-Type': 'application/json',
+                ...(await getAuthHeader())
+              };
             const res = await fetch('http://localhost:3001/api/check-sheet', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: headers,
                 body: JSON.stringify({ sheetId: id }),
             });
 
@@ -52,11 +64,15 @@ const GoogleSheetExport = ({ pois }) => {
 
         setExporting(true);
         setMessage('');
-
+        const headers = {
+            'Content-Type': 'application/json',
+            ...(await getAuthHeader())
+          };
         try {
+
             const res = await fetch('http://localhost:3001/api/export-to-sheet', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: headers,
                 body: JSON.stringify({ sheetId, pois }),
             });
 

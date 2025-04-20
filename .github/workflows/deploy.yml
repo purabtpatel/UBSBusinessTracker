@@ -32,6 +32,11 @@ jobs:
           username: ${{ secrets.LIGHTSAIL_USER }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
+            # Install Node and pm2 if not already installed
+            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+            sudo npm install -g pm2
+
             # Set up folders
             mkdir -p ~/app/client ~/app/server ~/app/build
 
@@ -49,20 +54,21 @@ jobs:
             # Decode and write credentials.json
             echo "${{ secrets.CREDENTIALS_JSON }}" | base64 -d > ~/app/server/credentials.json
 
-            # Build client
+            # Install dependencies and build frontend
             cd ~/app/client
             npm install
             npm run build
 
-            # Deploy client to public directory
-            sudo mkdir -p /var/www/poi-app
-            sudo rm -rf /var/www/poi-app/*
-            sudo cp -r dist/* /var/www/poi-app/
+            # Move build to backend public directory
+            rm -rf ~/app/server/public
+            mkdir -p ~/app/server/public
+            cp -r ~/app/client/dist/* ~/app/server/public/
 
-            # Install and run backend
+            # Install server dependencies
             cd ~/app/server
             npm install
 
-            # Restart backend server using PM2
-            pm2 start index.js --name poi-server --watch -- --port 3001 || pm2 restart poi-server
+            # Restart the backend server with pm2
+            pm2 delete app || true
+            pm2 start index.js --name app
             pm2 save
