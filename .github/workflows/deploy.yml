@@ -32,10 +32,9 @@ jobs:
           username: ${{ secrets.LIGHTSAIL_USER }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
-            # Install Node and pm2 if not already installed
+            # Install Node.js if not already installed
             curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
             sudo apt-get install -y nodejs
-            sudo npm install -g pm2
 
             # Set up folders
             mkdir -p ~/app/client ~/app/server ~/app/build
@@ -54,21 +53,45 @@ jobs:
             # Decode and write credentials.json
             echo "${{ secrets.CREDENTIALS_JSON }}" | base64 -d > ~/app/server/credentials.json
 
-            # Install dependencies and build frontend
+            # Build frontend
             cd ~/app/client
             npm install
             npm run build
 
-            # Move build to backend public directory
+            # Move build to server/public
             rm -rf ~/app/server/public
             mkdir -p ~/app/server/public
             cp -r ~/app/client/dist/* ~/app/server/public/
 
-            # Install server dependencies
+            # Install backend dependencies
             cd ~/app/server
             npm install
 
-            # Restart the backend server with pm2
-            pm2 delete app || true
-            pm2 start index.js --name app
-            pm2 save
+            # Create systemd service file
+            SERVICE_FILE="/etc/systemd/system/nodeapp.service"
+            sudo bash -c "cat > $SERVICE_FILE" <<EOF
+            [Unit]
+            Description=Node.js App
+            After=network.target
+
+            [Service]
+            Environment=NODE_ENV=production
+            WorkingDirectory=/home/${{ secrets.LIGHTSAIL_USER }}/app/server
+            ExecStart=/usr/bin/node index.js
+            Restart=always
+            RestartSec=10
+            StandardOutput=syslog
+            StandardError=syslog
+            SyslogIdentifier=nodeapp
+            User=${{ secrets.LIGHTSAIL_USER }}
+            EnvironmentFile=/home/${{ secrets.LIGHTSAIL_USER }}/app/server/.env
+
+            [Install]
+            WantedBy=multi-user.target
+            EOF
+
+            # Reload systemd, enable and restart the service
+            sudo systemctl daemon-reexec
+            sudo systemctl daemon-reload
+            sudo systemctl enable nodeapp
+            sudo systemctl restart nodeapp
