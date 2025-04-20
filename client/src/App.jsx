@@ -6,6 +6,9 @@ import PoiList from './components/PoiList';
 import { Grow } from '@mui/material';
 import './App.css';
 import GoogleSheetExport from './components/GoogleSheetExport';
+import AuthDropdown from './components/AuthDropdown';
+import { supabase } from './supabaseClient';
+
 
 const App = () => {
   const [center, setCenter] = useState({ lat: 37.7749, lon: -122.4194 }); // Default SF
@@ -13,13 +16,24 @@ const App = () => {
   const [radius, setRadius] = useState(5000);
   const [categorySet, setCategorySet] = useState('');
   const [address, setAddress] = useState('');
+  const [user, setUser] = useState(null);
 
+  const getAuthHeader = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token;
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
+  
 
   const handleAddressSearch = async (address) => {
     try {
+      const headers = {
+        'Content-Type': 'application/json',
+        ...(await getAuthHeader())
+      };
       const res = await fetch('http://localhost:3001/api/geocode', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: headers,
         body: JSON.stringify({ address })
       });
       const coords = await res.json();
@@ -33,9 +47,13 @@ const App = () => {
     setCenter(coords);
 
     try{
+      const headers = {
+        'Content-Type': 'application/json',
+        ...(await getAuthHeader())
+      };
       const res = await fetch('http://localhost:3001/api/reverse-geocode', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: headers,
         body: JSON.stringify(coords)
       });
       const data = await res.json();
@@ -53,10 +71,14 @@ const App = () => {
     setCategorySet(categorySet);
 
     try {
+      const headers = {
+        'Content-Type': 'application/json',
+        ...(await getAuthHeader())
+      };
       if (!categorySet) {
         const res = await fetch('http://localhost:3001/api/places-nearby', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: headers,
           body: JSON.stringify({
             lat: center.lat,
             lon: center.lon,
@@ -68,7 +90,7 @@ const App = () => {
       } else {
         const res = await fetch('http://localhost:3001/api/places', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: headers,
           body: JSON.stringify({
             lat: center.lat,
             lon: center.lon,
@@ -84,11 +106,25 @@ const App = () => {
     }
   };
 
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
   return (
     <div className="app-container">
 
       <h3 className="app-title">Business Finder</h3>
-
+      <header style={{ display: 'flex', justifyContent: 'flex-end', padding: '1rem' }}>
+        {user ? <span>Welcome, {user.email}</span> : <AuthDropdown onLogin={setUser} />}
+      </header>
 
       <AddressSearchBar onSearch={handleAddressSearch} address={address} setAddress={setAddress} />
 

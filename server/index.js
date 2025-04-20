@@ -4,6 +4,8 @@ import cors from 'cors';
 import { google } from 'googleapis';
 import fetch from 'node-fetch';
 import fs from 'fs';
+import jwt from 'jsonwebtoken';
+
 
 dotenv.config();
 
@@ -13,27 +15,46 @@ app.use(express.json());
 
 const TOMTOM_API_KEY = process.env.TOMTOM_API_KEY;
 
+
+// SUPABASE AUTH CONFIG
+const supabaseProjectId = process.env.SUPABASE_PROJECT_ID;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+
+
+function authenticateRequest(req, res, next) {
+  const token = req.headers.authorization?.split('Bearer ')[1];
+  if (!token) return res.status(401).json({ error: 'Missing token' });
+
+  jwt.verify(token, process.env.SUPABASE_JWT_SECRET, { algorithms: ['HS256'] }, (err, decoded) => {
+    if (err) {
+      console.error('JWT verification failed:', err.message);
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+    req.user = decoded;
+    next();
+  });
+}
+
+
+// Google Sheets Auth
 const auth = new google.auth.GoogleAuth({
-  keyFile: 'credentials.json', // Path to your service account credentials file
+  keyFile: 'credentials.json',
   scopes: ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive'],
 });
-
 const sheets = google.sheets({ version: 'v4', auth });
 const drive = google.drive({ version: 'v3', auth });
 
+// Middleware for route protection (apply selectively)
+const requireAuth = authenticateRequest;
 
-app.post('/api/places', async (req, res) => {
+// All protected routes use this
+app.post('/api/places', requireAuth, async (req, res) => {
   const { lat, lon, radius, category } = req.body;
-
   const url = `https://api.tomtom.com/search/2/poiSearch/${encodeURIComponent(category)}.json?key=${TOMTOM_API_KEY}&lat=${lat}&lon=${lon}&radius=${radius}&countrySet=US`;
-
   try {
     const response = await fetch(url);
     const data = await response.json();
-
     const results = filterUSResults(data.results || []);
-    //write to ./Sample.json
-    fs.writeFileSync('./Sample.json', JSON.stringify(results, null, 2), 'utf-8');
     res.json(results);
   } catch (error) {
     console.error('Error fetching places:', error);
@@ -41,25 +62,13 @@ app.post('/api/places', async (req, res) => {
   }
 });
 
-
-const filterUSResults = results =>
-  results.filter(place => place.address?.countryCodeISO3 === 'USA');
-
-
-app.post('/api/places-nearby', async (req, res) => {
+app.post('/api/places-nearby', requireAuth, async (req, res) => {
   const { lat, lon, radius } = req.body;
-  console.log('Received request for nearby places:', { lat, lon, radius });
   const apiUrl = `https://api.tomtom.com/search/2/nearbySearch/.json?key=${TOMTOM_API_KEY}&lat=${lat}&lon=${lon}&radius=${radius}`;
   try {
     const response = await fetch(apiUrl);
-    if (!response.ok) {
-      const errorBody = await response.text(); // Get error details from TomTom if available
-      console.error(`TomTom API Error: ${response.status} ${response.statusText}`, errorBody);
-      throw new Error(`TomTom API request failed with status ${response.status}`);
-    }
     const data = await response.json();
     const results = filterUSResults(data.results || []);
-    fs.writeFileSync('./Sample.json', JSON.stringify(results, null, 2), 'utf-8');
     res.json(data);
   } catch (error) {
     console.error('Error in /api/places-nearby handler:', error);
@@ -67,42 +76,28 @@ app.post('/api/places-nearby', async (req, res) => {
   }
 });
 
-app.post('/api/categories', async (req, res) => {
-  try{
+app.post('/api/categories', requireAuth, async (req, res) => {
+  try {
     const apiUrl = `https://api.tomtom.com/search/2/poiCategories.json?key=${TOMTOM_API_KEY}`;
     const response = await fetch(apiUrl);
-    if (!response.ok) {
-      const errorBody = await response.text();
-      console.error(`TomTom API Error: ${response.status} ${response.statusText}`, errorBody);
-      throw new Error(`TomTom API request failed with status ${response.status}`);
-    }
-    const data = await response.json(); 
-    console.log('TomTom API Response:', data); 
-
-    const simplifiedCategories = data.poiCategories.map(category => {
-      return {
-        id: category.id,
-        name: category.name
-      };
-    });
-  
+    const data = await response.json();
+    const simplifiedCategories = data.poiCategories.map(category => ({
+      id: category.id,
+      name: category.name
+    }));
     res.json(simplifiedCategories);
   } catch (error) {
-      console.error('Error in /api/places-categories handler:', error);
-      res.status(500).json({ error: 'Failed to fetch places categories' });
-    }
+    console.error('Error in /api/categories handler:', error);
+    res.status(500).json({ error: 'Failed to fetch categories' });
+  }
 });
 
-
-app.post('/api/geocode', async (req, res) => {
+app.post('/api/geocode', requireAuth, async (req, res) => {
   const { address } = req.body;
-
   const url = `https://api.tomtom.com/search/2/geocode/${encodeURIComponent(address)}.json?key=${TOMTOM_API_KEY}&countrySet=US`;
-
   try {
     const response = await fetch(url);
     const data = await response.json();
-
     const result = data.results[0];
     res.json(result.position);
   } catch (error) {
@@ -111,16 +106,12 @@ app.post('/api/geocode', async (req, res) => {
   }
 });
 
-app.post('/api/reverse-geocode', async (req, res) => {
+app.post('/api/reverse-geocode', requireAuth, async (req, res) => {
   const { lat, lon } = req.body;
-
   const url = `https://api.tomtom.com/search/2/reverseGeocode/${lat},${lon}.json?key=${TOMTOM_API_KEY}`;
-
   try {
     const response = await fetch(url);
-    console.log('Reverse geocode URL:', response); // Log the URL for debugging
     const data = await response.json();
-
     const address = data.addresses[0]?.address?.freeformAddress || 'Unknown';
     res.json({ address });
   } catch (error) {
@@ -129,7 +120,7 @@ app.post('/api/reverse-geocode', async (req, res) => {
   }
 });
 
-app.post('/api/export-to-sheet', async (req, res) => {
+app.post('/api/export-to-sheet', requireAuth, async (req, res) => {
   const { sheetId, pois } = req.body;
 
   if (!Array.isArray(pois) || pois.length === 0) {
@@ -137,18 +128,10 @@ app.post('/api/export-to-sheet', async (req, res) => {
   }
 
   const timestamp = new Date().toISOString();
-
-  // Define the header columns
   const headers = [
-    'Name',
-    'Address',
-    'Phone',
-    'Website',
-    'Search Categories',
-    'Latitude',
-    'Longitude',
-    'POI ID',
-    'Timestamp',
+    'Name', 'Address', 'Phone', 'Website',
+    'Search Categories', 'Latitude', 'Longitude',
+    'POI ID', 'Timestamp'
   ];
 
   const newRows = pois.map((poi) => [
@@ -160,102 +143,73 @@ app.post('/api/export-to-sheet', async (req, res) => {
     poi.position?.lat || '',
     poi.position?.lon || '',
     poi.id || '',
-    timestamp,
+    timestamp
   ]);
 
   try {
-    // STEP 1: Read existing sheet content
     const getRes = await sheets.spreadsheets.values.get({
       spreadsheetId: sheetId,
       range: 'Sheet1',
     });
 
     const values = getRes.data.values || [];
-
     const existingHeader = values[0] || [];
-    const existingData = values.slice(1); // exclude header row
-
-    // STEP 2: Add header row if missing or incomplete
+    const existingData = values.slice(1);
     if (existingHeader.length < headers.length) {
       await sheets.spreadsheets.values.update({
         spreadsheetId: sheetId,
         range: 'Sheet1!A1',
         valueInputOption: 'RAW',
-        requestBody: {
-          values: [headers],
-        },
+        requestBody: { values: [headers] },
       });
     }
 
-    // STEP 3: Extract existing POI IDs regardless of their row position
     const poiIdColumnIndex = existingHeader.indexOf('POI ID');
     const existingIds = new Set();
-
     if (poiIdColumnIndex !== -1) {
       for (let row of existingData) {
         const existingId = row[poiIdColumnIndex];
-        if (existingId) {
-          existingIds.add(existingId.trim());
-        }
+        if (existingId) existingIds.add(existingId.trim());
       }
     }
 
-    // STEP 4: Filter out duplicates using POI ID
-    const uniqueRows = newRows.filter((row) => !existingIds.has(row[7])); // 7 = POI ID column
+    const uniqueRows = newRows.filter((row) => !existingIds.has(row[7]));
     const skipped = newRows.length - uniqueRows.length;
 
-    // STEP 5: Append unique rows (if any)
     if (uniqueRows.length > 0) {
       await sheets.spreadsheets.values.append({
         spreadsheetId: sheetId,
         range: 'Sheet1',
         valueInputOption: 'RAW',
         insertDataOption: 'INSERT_ROWS',
-        requestBody: {
-          values: uniqueRows,
-        },
+        requestBody: { values: uniqueRows },
       });
     }
 
-    res.json({
-      success: true,
-      added: uniqueRows.length,
-      skipped,
-      total: newRows.length,
-    });
+    res.json({ success: true, added: uniqueRows.length, skipped, total: newRows.length });
   } catch (error) {
     console.error('Error exporting to sheet:', error.message);
     res.status(500).json({ error: 'Failed to export POIs to Google Sheet' });
   }
 });
 
-
-// Add this alongside your other Express routes
-app.post('/api/check-sheet', async (req, res) => {
+app.post('/api/check-sheet', requireAuth, async (req, res) => {
   const { sheetId } = req.body;
-
-  if (!sheetId) {
-    return res.status(400).json({ error: 'Missing sheet ID' });
-  }
+  if (!sheetId) return res.status(400).json({ error: 'Missing sheet ID' });
 
   try {
-    const metadata = await sheets.spreadsheets.get({
-      spreadsheetId: sheetId,
-    });
-
-    if (metadata) {
-      res.json({ valid: true });
-    } else {
-      res.status(404).json({ error: 'Sheet not found' });
-    }
+    const metadata = await sheets.spreadsheets.get({ spreadsheetId: sheetId });
+    if (metadata) res.json({ valid: true });
+    else res.status(404).json({ error: 'Sheet not found' });
   } catch (err) {
     console.error('Sheet check failed:', err);
     res.status(500).json({ error: 'Could not access Google Sheet' });
   }
 });
 
+function filterUSResults(results) {
+  return results.filter(place => place.address?.countryCodeISO3 === 'USA');
+}
 
-
-// Start the server
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));

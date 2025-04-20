@@ -35,9 +35,18 @@ jobs:
             # Set up folders
             mkdir -p ~/app/client ~/app/server ~/app/build
 
-            # Write .env files and credentials
+            # Write client .env
             echo "VITE_TOMTOM_API_KEY=${{ secrets.VITE_TOMTOM_API_KEY }}" > ~/app/client/.env
+            echo "VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}" >> ~/app/client/.env
+            echo "VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}" >> ~/app/client/.env
+
+            # Write server .env
             echo "TOMTOM_API_KEY=${{ secrets.TOMTOM_API_KEY }}" > ~/app/server/.env
+            echo "SUPABASE_PROJECT_ID=${{ secrets.SUPABASE_PROJECT_ID }}" >> ~/app/server/.env
+            echo "SUPABASE_JWT_SECRET=${{ secrets.SUPABASE_JWT_SECRET }}" >> ~/app/server/.env
+            echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> ~/app/server/.env
+
+            # Decode and write credentials.json
             echo "${{ secrets.CREDENTIALS_JSON }}" | base64 -d > ~/app/server/credentials.json
 
             # Build client
@@ -45,15 +54,15 @@ jobs:
             npm install
             npm run build
 
-            # Deploy client
+            # Deploy client to public directory
             sudo mkdir -p /var/www/poi-app
             sudo rm -rf /var/www/poi-app/*
             sudo cp -r dist/* /var/www/poi-app/
 
-            # Set up server
+            # Install and run backend
             cd ~/app/server
             npm install
 
-            # Start or restart server
+            # Restart backend server using PM2
             pm2 start index.js --name poi-server --watch -- --port 3001 || pm2 restart poi-server
             pm2 save
