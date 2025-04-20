@@ -43,7 +43,7 @@ jobs:
             # Write client .env
             echo "VITE_TOMTOM_API_KEY=${{ secrets.VITE_TOMTOM_API_KEY }}" > ~/app/client/.env
             echo "VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}" >> ~/app/client/.env
-            echo "VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}" >> ~/app/client/.env
+            echo "VITE_ANON_KEY=${{ secrets.VITE_ANON_KEY }}" >> ~/app/client/.env
 
             # Write server .env
             echo "TOMTOM_API_KEY=${{ secrets.TOMTOM_API_KEY }}" > ~/app/server/.env
