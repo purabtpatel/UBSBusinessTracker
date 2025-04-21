@@ -12,11 +12,12 @@ const GoogleSheetExport = ({ pois }) => {
     const [message, setMessage] = useState('');
     const [exportStats, setExportStats] = useState(null);
 
-  const getAuthHeader = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  };
+    const getAuthHeader = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        const token = session?.access_token;
+        return token ? { Authorization: `Bearer ${token}` } : {};
+    };
+    const host = import.meta.env.VITE_HOST;
 
 
     const extractSheetId = (url) => {
@@ -36,8 +37,8 @@ const GoogleSheetExport = ({ pois }) => {
             const headers = {
                 'Content-Type': 'application/json',
                 ...(await getAuthHeader())
-              };
-            const res = await fetch('http://localhost:3001/api/check-sheet', {
+            };
+            const res = await fetch(`http://${host}:3001/api/check-sheet`, {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify({ sheetId: id }),
@@ -67,10 +68,10 @@ const GoogleSheetExport = ({ pois }) => {
         const headers = {
             'Content-Type': 'application/json',
             ...(await getAuthHeader())
-          };
+        };
         try {
 
-            const res = await fetch('http://localhost:3001/api/export-to-sheet', {
+            const res = await fetch(`http://${host}:3001/api/export-to-sheet`, {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify({ sheetId, pois }),
@@ -114,10 +115,10 @@ const GoogleSheetExport = ({ pois }) => {
                 {connected === false && <FontAwesomeIcon icon={faTimesCircle} color="red" />}
                 {message && <span>{message}</span>}
                 {exportStats && (
-                <div style={{ fontSize: '0.75rem', marginTop: '0.25rem', color: '#444' }}>
-                    <strong>Added:</strong> {exportStats.added} &nbsp;|&nbsp;
-                    <strong>Skipped (duplicates):</strong> {exportStats.skipped}
-                </div>
+                    <div style={{ fontSize: '0.75rem', marginTop: '0.25rem', color: '#444' }}>
+                        <strong>Added:</strong> {exportStats.added} &nbsp;|&nbsp;
+                        <strong>Skipped (duplicates):</strong> {exportStats.skipped}
+                    </div>
                 )}
 
             </div>

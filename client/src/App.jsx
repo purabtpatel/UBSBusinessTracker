@@ -23,7 +23,7 @@ const App = () => {
     const token = session?.access_token;
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
-  
+  const host = import.meta.env.VITE_HOST;
 
   const handleAddressSearch = async (address) => {
     try {
@@ -31,7 +31,7 @@ const App = () => {
         'Content-Type': 'application/json',
         ...(await getAuthHeader())
       };
-      const res = await fetch('http://localhost:3001/api/geocode', {
+      const res = await fetch(`http://${host}:3001/api/geocode`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify({ address })
@@ -51,7 +51,7 @@ const App = () => {
         'Content-Type': 'application/json',
         ...(await getAuthHeader())
       };
-      const res = await fetch('http://localhost:3001/api/reverse-geocode', {
+      const res = await fetch(`http://${host}:3001/api/reverse-geocode`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(coords)
@@ -76,7 +76,7 @@ const App = () => {
         ...(await getAuthHeader())
       };
       if (!categorySet) {
-        const res = await fetch('http://localhost:3001/api/places-nearby', {
+        const res = await fetch(`http://${host}:3001/api/places-nearby`, {
           method: 'POST',
           headers: headers,
           body: JSON.stringify({
@@ -88,7 +88,7 @@ const App = () => {
         const data = await res.json();
         setPois(data.results); // ✅ This works because "places-nearby" returns { results: [...] }
       } else {
-        const res = await fetch('http://localhost:3001/api/places', {
+        const res = await fetch(`http://${host}:3001/api/places`, {
           method: 'POST',
           headers: headers,
           body: JSON.stringify({
