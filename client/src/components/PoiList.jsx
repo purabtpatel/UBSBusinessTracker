@@ -30,7 +30,7 @@ const PoiList = ({ results, center }) => {
   });
 
   return (
-    <div style={{ padding: '0.5rem', maxHeight: '38vh', overflowY: 'auto', border: '1px solid #ddd', fontSize: '0.8rem' }}>
+    <div style={{ padding: '0.5rem', maxHeight: '64vh', overflowY: 'auto', border: '1px solid #ddd', fontSize: '0.8rem' }}>
       <div style={{ marginBottom: '0.5rem', fontWeight: 600 }}>
         {sortedResults.length} Places Found
       </div>

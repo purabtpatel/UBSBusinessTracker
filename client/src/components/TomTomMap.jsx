@@ -115,7 +115,7 @@ const TomTomMap = ({ center, radius, onMapClick, pois = [] }) => {
     <div
       ref={mapRef}
       className="tomtom-map"
-      style={{ height: '80vh', width: '60vw' }}
+      style={{ height: '84vh', width: '60vw' }}
     />
   );
 };

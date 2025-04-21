@@ -120,11 +120,13 @@ const App = () => {
 
   return (
     <div className="app-container">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 
       <h3 className="app-title">Business Finder</h3>
       <header style={{ display: 'flex', justifyContent: 'flex-end', padding: '1rem' }}>
         {user ? <span>Welcome, {user.email}</span> : <AuthDropdown onLogin={setUser} />}
       </header>
+      </div>
 
       <AddressSearchBar onSearch={handleAddressSearch} address={address} setAddress={setAddress} />
 

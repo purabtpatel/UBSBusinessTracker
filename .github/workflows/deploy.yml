@@ -34,10 +34,10 @@ jobs:
           script: |
             # Install Node.js if not already installed
             curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-            sudo apt-get install -y nodejs
+            sudo apt-get install -y nodejs nginx
 
             # Set up folders
-            mkdir -p ~/app/client ~/app/server ~/app/build
+            mkdir -p ~/app/client ~/app/server
 
             # Write client .env
             echo "VITE_TOMTOM_API_KEY=${{ secrets.VITE_TOMTOM_API_KEY }}" > ~/app/client/.env
@@ -53,10 +53,24 @@ jobs:
             # Decode and write credentials.json
             echo "${{ secrets.CREDENTIALS_JSON }}" | base64 -d > ~/app/server/credentials.json
 
+            # Install dependencies
             cd ~/app/client
             npm install
+            npm run build
 
             cd ~/app/server
             npm install
 
+            # Restart Express backend (using pm2 for process management)
+            if ! command -v pm2 &> /dev/null; then
+              sudo npm install -g pm2
+            fi
+            pm2 start index.js --name backend --cwd ~/app/server --update-env || pm2 restart backend
 
+            # Deploy frontend build to NGINX
+            sudo rm -rf /var/www/html/*
+            sudo cp -r ~/app/client/dist/* /var/www/html/
+
+            # Start NGINX
+            sudo systemctl enable nginx
+            sudo systemctl restart nginx

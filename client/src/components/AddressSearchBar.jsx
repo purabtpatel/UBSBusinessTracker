@@ -20,7 +20,7 @@ const AddressSearchBar = ({ onSearch, address, setAddress }) => {
     <Paper
       component="form"
       onSubmit={handleSubmit}
-      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', flexGrow: 1}}
+      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', flexGrow: 1, borderColor: '#ccc', borderWidth: '1px', borderStyle: 'solid', borderRadius: '4px' }}
       >
       <InputBase
         sx={{ ml: 1, flex: 1 }}
