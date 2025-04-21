@@ -53,4 +53,10 @@ jobs:
             # Decode and write credentials.json
             echo "${{ secrets.CREDENTIALS_JSON }}" | base64 -d > ~/app/server/credentials.json
 
-            
+            cd ~/app/client
+            npm install
+
+            cd ~/app/server
+            npm install
+
+
