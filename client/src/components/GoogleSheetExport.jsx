@@ -38,7 +38,7 @@ const GoogleSheetExport = ({ pois }) => {
                 'Content-Type': 'application/json',
                 ...(await getAuthHeader())
             };
-            const res = await fetch(`http://${host}:3001/api/check-sheet`, {
+            const res = await fetch(`https://${host}/api/check-sheet`, {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify({ sheetId: id }),
@@ -71,7 +71,7 @@ const GoogleSheetExport = ({ pois }) => {
         };
         try {
 
-            const res = await fetch(`http://${host}:3001/api/export-to-sheet`, {
+            const res = await fetch(`https://${host}/api/export-to-sheet`, {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify({ sheetId, pois }),
