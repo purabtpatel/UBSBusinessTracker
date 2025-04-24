@@ -31,7 +31,7 @@ const App = () => {
         'Content-Type': 'application/json',
         ...(await getAuthHeader())
       };
-      const res = await fetch(`https://${host}/api/geocode`, {
+      const res = await fetch(`https://businessradar.biz/api/geocode`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify({ address })
@@ -51,7 +51,7 @@ const App = () => {
         'Content-Type': 'application/json',
         ...(await getAuthHeader())
       };
-      const res = await fetch(`https://${host}/api/reverse-geocode`, {
+      const res = await fetch(`https://businessradar.biz/api/reverse-geocode`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(coords)
@@ -76,7 +76,7 @@ const App = () => {
         ...(await getAuthHeader())
       };
       if (!categorySet) {
-        const res = await fetch(`https://${host}/api/places-nearby`, {
+        const res = await fetch(`https://businessradar.biz/api/places-nearby`, {
           method: 'POST',
           headers: headers,
           body: JSON.stringify({
@@ -88,7 +88,7 @@ const App = () => {
         const data = await res.json();
         setPois(data.results); // ✅ This works because "places-nearby" returns { results: [...] }
       } else {
-        const res = await fetch(`https://${host}/api/places`, {
+        const res = await fetch(`https://businessradar.biz/api/places`, {
           method: 'POST',
           headers: headers,
           body: JSON.stringify({
